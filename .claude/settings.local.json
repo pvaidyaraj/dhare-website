@@ -12,7 +12,18 @@
       "Bash(node -e \"console.log\\(require\\('./node_modules/zod/package.json'\\).version\\)\")",
       "Bash(gh auth *)",
       "Bash(git init *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git config *)",
+      "Bash(gh repo *)",
+      "Bash(vercel *)",
+      "PowerShell(npm install *)",
+      "Bash(supabase --version)",
+      "Bash(psql --version)",
+      "PowerShell(winget install *)",
+      "PowerShell(& \"$env:USERPROFILE\\\\.supabase\\\\bin\\\\supabase.exe\" --version 2>&1)",
+      "Bash(node -e ' *)",
+      "Bash(git push *)"
     ]
   }
 }

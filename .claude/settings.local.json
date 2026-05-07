@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//d/Dhare_Website/dhare_website_content/**)",
+      "Bash(python -c ' *)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(curl *)",
+      "PowerShell(Start-Process \"http://localhost:3000\")",
+      "PowerShell(New-Item *)",
+      "PowerShell(Start-Process \"http://localhost:3000/volunteer\")",
+      "Bash(node -e \"console.log\\(require\\('./node_modules/zod/package.json'\\).version\\)\")",
+      "Bash(gh auth *)",
+      "Bash(git init *)",
+      "Bash(git add *)"
+    ]
+  }
+}

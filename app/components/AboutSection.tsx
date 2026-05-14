@@ -11,7 +11,7 @@ const pillars = [
 
 export default function AboutSection() {
   return (
-    <section id="about" className="py-10 sm:py-14 bg-white">
+    <section id="about" className="py-8 sm:py-10 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Text */}

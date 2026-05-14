@@ -36,10 +36,10 @@ export default function MediaCoverageSection() {
   };
 
   return (
-    <section id="media" className="py-10 sm:py-14 bg-stone-50">
+    <section id="media" className="py-8 sm:py-10 bg-stone-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-8">
+        <div className="text-center max-w-2xl mx-auto mb-5">
           <p className="text-green-700 font-semibold text-sm uppercase tracking-widest mb-2">Press & Media</p>
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Media Coverage</h2>
           <p className="text-gray-500 text-sm leading-relaxed">

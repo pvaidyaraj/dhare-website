@@ -15,10 +15,10 @@ const miyawakiBenefits = [
 
 export default function WorkSection() {
   return (
-    <section id="work" className="py-10 sm:py-14 bg-white">
+    <section id="work" className="py-8 sm:py-10 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-8">
+        <div className="text-center max-w-2xl mx-auto mb-6">
           <p className="text-green-700 font-semibold text-sm uppercase tracking-widest mb-3">Our Work</p>
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
             Why Miyawaki Forests?
@@ -30,7 +30,7 @@ export default function WorkSection() {
         </div>
 
         {/* Miyawaki Forest — image + features */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-7">
           <div className="relative h-72 sm:h-96 rounded-2xl overflow-hidden shadow-xl order-2 lg:order-1">
             <Image
               src="/images/miyawaki-sign.jpeg"
@@ -76,7 +76,7 @@ export default function WorkSection() {
         </div>
 
         {/* Urban biodiversity danger callout */}
-        <div className="mt-8 bg-amber-50 border border-amber-200 rounded-2xl p-6 sm:p-10">
+        <div className="mt-6 bg-amber-50 border border-amber-200 rounded-2xl p-5 sm:p-7">
           <div className="max-w-3xl mx-auto text-center">
             <p className="text-amber-700 font-semibold text-sm uppercase tracking-widest mb-3">The Crisis</p>
             <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">

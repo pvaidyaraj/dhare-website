@@ -41,7 +41,7 @@ const photos = [
 
 export default function GallerySection() {
   return (
-    <section id="gallery" className="py-10 sm:py-14 bg-stone-50">
+    <section id="gallery" className="py-8 sm:py-10 bg-stone-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-7">
@@ -74,7 +74,7 @@ export default function GallerySection() {
         </div>
 
         {/* Photo categories */}
-        <div className="flex flex-wrap justify-center gap-2 mt-8">
+        <div className="flex flex-wrap justify-center gap-2 mt-4">
           {["Plantation Drives", "Miyawaki Forests", "Volunteer Activities", "Before & After", "Biodiversity"].map((tag) => (
             <span
               key={tag}

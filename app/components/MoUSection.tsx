@@ -11,14 +11,14 @@ const tankPoints = [
 
 export default function MoUSection() {
   return (
-    <section className="py-10 sm:py-14 bg-stone-50">
+    <section className="py-8 sm:py-10 bg-stone-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
-        <div className="text-center max-w-3xl mx-auto mb-8">
+        <div className="text-center max-w-3xl mx-auto mb-6">
           <p className="text-green-700 font-semibold text-sm uppercase tracking-widest mb-3">
             Ecological Mission
           </p>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
             Restoring Karnataka's Green Heritage
           </h2>
           <p className="text-gray-600 leading-relaxed">
@@ -58,7 +58,7 @@ export default function MoUSection() {
                 <h3 className="text-gray-900 font-bold text-lg">Restoring Water Bodies, Recharging Groundwater</h3>
               </div>
             </div>
-            <p className="text-gray-600 text-sm leading-relaxed mb-5">
+            <p className="text-gray-600 text-sm leading-relaxed mb-3">
               Karnataka's tanks are ecological systems that support agriculture, groundwater recharge, birds, aquatic life,
               cattle, local communities, and surrounding vegetation. Dhare Foundation aims to support tank rejuvenation by:
             </p>

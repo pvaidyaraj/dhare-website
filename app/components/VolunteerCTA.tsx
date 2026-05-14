@@ -14,7 +14,7 @@ const volunteerRoles = [
 
 export default function VolunteerCTA() {
   return (
-    <section id="volunteer" className="py-10 sm:py-14 bg-white">
+    <section id="volunteer" className="py-8 sm:py-10 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative bg-green-800 rounded-3xl overflow-hidden">
           {/* Background image */}
@@ -27,14 +27,14 @@ export default function VolunteerCTA() {
             />
           </div>
 
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 p-8 sm:p-12 lg:p-16 items-center">
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 sm:p-8 lg:p-10 items-center">
             {/* Text */}
             <div>
               <p className="text-green-400 font-semibold text-sm uppercase tracking-widest mb-3">Join Us</p>
               <h2 className="text-3xl sm:text-4xl font-bold text-white mb-5">
                 Become a Green Volunteer
               </h2>
-              <p className="text-green-100 leading-relaxed mb-6">
+              <p className="text-green-100 leading-relaxed mb-4">
                 Dhare Foundation welcomes citizens, students, professionals, families, resident welfare associations,
                 companies, schools, colleges, and community groups to participate in plantation and ecological restoration activities.
               </p>

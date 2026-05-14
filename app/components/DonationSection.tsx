@@ -86,7 +86,7 @@ export default function DonationSection() {
   const [showBankDetails, setShowBankDetails] = useState(false);
 
   return (
-    <section id="donate" className="py-10 sm:py-14 bg-green-900">
+    <section id="donate" className="py-8 sm:py-10 bg-green-900">
       {showBankDetails && <BankDetailsModal onClose={() => setShowBankDetails(false)} />}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -100,11 +100,11 @@ export default function DonationSection() {
         </div>
 
         {/* Tiers */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-6">
           {tiers.map((tier) => (
             <div
               key={tier.amount}
-              className={`rounded-2xl p-6 sm:p-8 flex flex-col ${
+              className={`rounded-2xl p-5 sm:p-6 flex flex-col ${
                 tier.highlighted
                   ? "bg-green-500 border-2 border-green-400 shadow-xl shadow-green-900/50 scale-105"
                   : "bg-green-800/60 border border-green-700"
@@ -155,7 +155,7 @@ export default function DonationSection() {
         </div>
 
         {/* Payment methods */}
-        <div className="mt-10 text-center">
+        <div className="mt-5 text-center">
           <p className="text-green-400 text-xs uppercase tracking-widest mb-3">Payment Options</p>
           <div className="flex flex-wrap justify-center gap-3">
             {["UPI", "Debit Card", "Credit Card", "Net Banking", "QR Code", "Bank Transfer", "CSR Transfer"].map((m) => (

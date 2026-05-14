@@ -93,11 +93,11 @@ export default function Footer() {
     <footer className="bg-gray-900 text-gray-300">
       {activeDoc && <DocumentModal doc={activeDoc} onClose={() => setActiveDoc(null)} />}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-3 mb-3">
               <Image
                 src="/logos/dhare-logo-new.png"
                 alt="Dhare Foundation"
@@ -118,7 +118,7 @@ export default function Footer() {
 
           {/* Quick links */}
           <div>
-            <p className="text-white font-semibold text-sm mb-4 uppercase tracking-wide">Quick Links</p>
+            <p className="text-white font-semibold text-sm mb-3 uppercase tracking-wide">Quick Links</p>
             <ul className="space-y-2">
               {navLinks.map((link) => (
                 <li key={link.href}>
@@ -132,7 +132,7 @@ export default function Footer() {
 
           {/* Documents */}
           <div>
-            <p className="text-white font-semibold text-sm mb-4 uppercase tracking-wide">Documents</p>
+            <p className="text-white font-semibold text-sm mb-3 uppercase tracking-wide">Documents</p>
             <ul className="space-y-2">
               {docItems.map((doc) => (
                 <li key={doc.label}>
@@ -145,7 +145,7 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-            <div className="mt-5">
+            <div className="mt-3">
               <p className="text-white font-semibold text-sm mb-2">Volunteer Registration</p>
               <Link href="/volunteer" className="text-green-400 hover:text-green-300 text-sm transition-colors">
                 Register Here →

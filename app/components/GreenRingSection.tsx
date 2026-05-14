@@ -12,18 +12,18 @@ const outcomes = [
 
 export default function GreenRingSection() {
   return (
-    <section id="green-ring" className="py-10 sm:py-14 bg-green-50">
+    <section id="green-ring" className="py-8 sm:py-10 bg-green-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Text */}
           <div>
-            <div className="inline-flex items-center gap-2 bg-green-200 rounded-full px-4 py-1.5 mb-5">
+            <div className="inline-flex items-center gap-2 bg-green-200 rounded-full px-4 py-1.5 mb-3">
               <span className="text-green-800 text-sm font-bold">Flagship Mission</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
               Green Ring Bengaluru
             </h2>
-            <p className="text-2xl font-semibold text-green-700 mb-5">
+            <p className="text-2xl font-semibold text-green-700 mb-3">
               2 Crore Saplings for Bengaluru's Ecological Future
             </p>
             <p className="text-gray-600 leading-relaxed mb-4">

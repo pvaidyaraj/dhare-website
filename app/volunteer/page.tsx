@@ -64,14 +64,14 @@ export default function VolunteerPage() {
               {/* Image */}
               <div className="relative h-52 sm:h-64 rounded-2xl overflow-hidden shadow mb-6">
                 <Image
-                  src="/images/community-volunteer.jpeg"
-                  alt="Community volunteer with native sapling"
+                  src="/images/dhare-volunteer.jpg"
+                  alt="Dhare Foundation volunteer"
                   fill
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-4">
                   <p className="text-white text-xs font-medium">
-                    Community member holding a native sapling — Green Ring Bengaluru
+                    Dhare Foundation volunteer — Green Ring Bengaluru
                   </p>
                 </div>
               </div>
@@ -89,12 +89,6 @@ export default function VolunteerPage() {
                 </div>
               </div>
 
-              {/* Partnership badge */}
-              <div className="mt-5 bg-green-50 border border-green-200 rounded-2xl p-4">
-                <p className="text-green-800 text-xs font-semibold uppercase tracking-wide mb-1">In Partnership With</p>
-                <p className="text-green-900 text-sm font-bold">Karnataka State Legal Services Authority</p>
-                <p className="text-green-700 text-xs mt-1">KSLSA – Dhare Foundation MoU for ecological conservation</p>
-              </div>
             </div>
 
             {/* Right: form card */}

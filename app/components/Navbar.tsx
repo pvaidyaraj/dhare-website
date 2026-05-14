@@ -12,6 +12,7 @@ export default function Navbar() {
     { href: "#green-ring", label: "Green Ring" },
     { href: "#work", label: "Our Work" },
     { href: "#gallery", label: "Gallery" },
+    { href: "#media", label: "Media" },
     { href: "#donate", label: "Donate" },
     { href: "#volunteer", label: "Volunteer" },
   ];
@@ -19,11 +20,11 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-green-100 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
+        <div className="flex items-center justify-between h-16 sm:h-[72px]">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 shrink-0">
             <Image
-              src="/logos/dhare-logo.jpeg"
+              src="/logos/dhare-logo-new.png"
               alt="Dhare Foundation"
               width={48}
               height={48}
@@ -37,26 +38,26 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-5">
             {navLinks.map((link) => (
-              <Link
+              <a
                 key={link.href}
                 href={link.href}
                 className="text-sm font-medium text-gray-700 hover:text-green-700 transition-colors"
               >
                 {link.label}
-              </Link>
+              </a>
             ))}
           </div>
 
           {/* CTA + Hamburger */}
           <div className="flex items-center gap-3">
-            <Link
+            <a
               href="#donate"
               className="hidden sm:inline-flex items-center px-4 py-2 bg-green-700 text-white text-sm font-semibold rounded-full hover:bg-green-800 transition-colors"
             >
               Donate Now
-            </Link>
+            </a>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100"
@@ -75,25 +76,25 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {menuOpen && (
-          <div className="md:hidden border-t border-green-100 py-4 space-y-1">
+          <div className="md:hidden border-t border-green-100 py-3 space-y-1">
             {navLinks.map((link) => (
-              <Link
+              <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
                 className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition-colors"
               >
                 {link.label}
-              </Link>
+              </a>
             ))}
-            <div className="pt-3 px-3">
-              <Link
+            <div className="pt-2 px-3">
+              <a
                 href="#donate"
                 onClick={() => setMenuOpen(false)}
                 className="block w-full text-center px-4 py-2 bg-green-700 text-white text-sm font-semibold rounded-full hover:bg-green-800 transition-colors"
               >
                 Donate Now
-              </Link>
+              </a>
             </div>
           </div>
         )}

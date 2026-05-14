@@ -11,22 +11,20 @@ const tankPoints = [
 
 export default function MoUSection() {
   return (
-    <section className="py-16 sm:py-24 bg-stone-50">
+    <section className="py-10 sm:py-14 bg-stone-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* KSLSA MoU */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        {/* Section header */}
+        <div className="text-center max-w-3xl mx-auto mb-8">
           <p className="text-green-700 font-semibold text-sm uppercase tracking-widest mb-3">
-            KSLSA – Dhare Foundation MoU
+            Ecological Mission
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
-            A Landmark Ecological Partnership for Karnataka
+            Restoring Karnataka's Green Heritage
           </h2>
           <p className="text-gray-600 leading-relaxed">
-            Dhare Foundation has entered into a Memorandum of Understanding with the{" "}
-            <strong className="text-green-800">Karnataka State Legal Services Authority</strong> to support large-scale
-            ecological conservation across Karnataka — encouraging plantation, biodiversity protection, groundwater
-            recharge, and environmental restoration through cooperation between institutions, local bodies, government
-            departments, communities, and civil society.
+            Dhare Foundation is working towards large-scale ecological conservation across Karnataka — encouraging
+            plantation, biodiversity protection, groundwater recharge, and environmental restoration through
+            cooperation between institutions, local bodies, government departments, communities, and civil society.
           </p>
         </div>
 

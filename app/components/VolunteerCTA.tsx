@@ -14,7 +14,7 @@ const volunteerRoles = [
 
 export default function VolunteerCTA() {
   return (
-    <section id="volunteer" className="py-16 sm:py-24 bg-white">
+    <section id="volunteer" className="py-10 sm:py-14 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative bg-green-800 rounded-3xl overflow-hidden">
           {/* Background image */}

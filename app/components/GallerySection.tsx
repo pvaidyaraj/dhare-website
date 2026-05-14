@@ -41,10 +41,10 @@ const photos = [
 
 export default function GallerySection() {
   return (
-    <section id="gallery" className="py-16 sm:py-24 bg-stone-50">
+    <section id="gallery" className="py-10 sm:py-14 bg-stone-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12">
+        <div className="text-center max-w-2xl mx-auto mb-7">
           <p className="text-green-700 font-semibold text-sm uppercase tracking-widest mb-3">Gallery</p>
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Forests in the Making</h2>
           <p className="text-gray-600 leading-relaxed">

@@ -19,11 +19,13 @@ const schema = z.object({
     .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
   email: z.string().email("Enter a valid email address"),
   skills: z.array(z.string()).min(1, "Select at least one skill"),
+  other_interests: z.string().max(500, "Maximum 500 characters").optional(),
   availability: z.array(z.string()).min(1, "Select at least one availability slot"),
   motivation: z
     .string()
     .min(20, "Please share a bit more — at least 20 characters")
     .max(1000, "Maximum 1000 characters"),
+  not_a_robot: z.literal(true, { message: "Please confirm you are not a robot" }),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -82,12 +84,13 @@ export default function VolunteerForm() {
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { skills: [], availability: [] },
+    defaultValues: { skills: [], availability: [], not_a_robot: undefined },
   });
 
   const selectedSkills = watch("skills") ?? [];
   const selectedAvailability = watch("availability") ?? [];
   const motivationValue = watch("motivation") ?? "";
+  const otherInterestsValue = watch("other_interests") ?? "";
 
   function toggleCheckbox(field: "skills" | "availability", value: string) {
     const current = field === "skills" ? selectedSkills : selectedAvailability;
@@ -229,6 +232,26 @@ export default function VolunteerForm() {
           })}
         </div>
         <FieldError message={errors.skills?.message} />
+
+        {/* Any other interests */}
+        <div className="mt-3">
+          <label htmlFor="other_interests" className="block text-sm text-gray-600 mb-1.5">
+            Any other interests or skills?
+          </label>
+          <textarea
+            id="other_interests"
+            placeholder="e.g. Landscape architecture, legal aid, organic farming…"
+            rows={2}
+            {...register("other_interests")}
+            className={`${inputClass(!!errors.other_interests)} resize-none`}
+          />
+          <div className="flex justify-between mt-1">
+            <FieldError message={errors.other_interests?.message} />
+            <span className={`text-xs ml-auto ${otherInterestsValue.length > 450 ? "text-amber-600" : "text-gray-400"}`}>
+              {otherInterestsValue.length}/500
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Availability */}
@@ -271,6 +294,23 @@ export default function VolunteerForm() {
           <span className={`text-xs ml-auto ${motivationValue.length > 900 ? "text-amber-600" : "text-gray-400"}`}>
             {motivationValue.length}/1000
           </span>
+        </div>
+      </div>
+
+      {/* Human verification */}
+      <div className={`flex items-start gap-3 p-4 rounded-xl border ${errors.not_a_robot ? "border-red-300 bg-red-50" : "border-gray-200 bg-gray-50"}`}>
+        <input
+          id="not_a_robot"
+          type="checkbox"
+          {...register("not_a_robot")}
+          className="mt-0.5 w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-500 cursor-pointer shrink-0"
+        />
+        <div>
+          <label htmlFor="not_a_robot" className="text-sm font-medium text-gray-700 cursor-pointer select-none">
+            I am not a robot
+          </label>
+          <p className="text-xs text-gray-500 mt-0.5">Please confirm you are a human before submitting.</p>
+          <FieldError message={errors.not_a_robot?.message} />
         </div>
       </div>
 

@@ -16,11 +16,13 @@ const volunteerSchema = z.object({
     .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
   email: z.string().email("Enter a valid email address"),
   skills: z.array(z.string()).min(1, "Select at least one skill"),
+  other_interests: z.string().max(500).optional(),
   availability: z.array(z.string()).min(1, "Select at least one availability slot"),
   motivation: z
     .string()
     .min(20, "Please share a bit more — at least 20 characters")
     .max(1000, "Maximum 1000 characters"),
+  not_a_robot: z.literal(true).optional(),
 });
 
 export type VolunteerFormData = z.infer<typeof volunteerSchema>;
@@ -47,6 +49,7 @@ export async function submitVolunteerForm(
     phone: parsed.data.phone,
     email: parsed.data.email,
     skills: parsed.data.skills,
+    other_interests: parsed.data.other_interests ?? null,
     availability: parsed.data.availability,
     motivation: parsed.data.motivation,
   });

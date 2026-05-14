@@ -11,23 +11,23 @@ const pillars = [
 
 export default function AboutSection() {
   return (
-    <section id="about" className="py-16 sm:py-24 bg-white">
+    <section id="about" className="py-10 sm:py-14 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Text */}
           <div>
             <p className="text-green-700 font-semibold text-sm uppercase tracking-widest mb-3">
               About Dhare Foundation
             </p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight mb-6">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight mb-4">
               Let Karnataka Breathe Again
             </h2>
-            <p className="text-gray-600 text-lg leading-relaxed mb-6">
+            <p className="text-gray-600 text-base leading-relaxed mb-4">
               Dhare Foundation is working to restore Karnataka's ecological balance. Our mission is to create green spaces
               that are not just tree plantations, but <strong className="text-green-800">living habitats</strong> for birds, butterflies,
               bees, insects, soil organisms, and future generations.
             </p>
-            <p className="text-gray-600 leading-relaxed mb-8">
+            <p className="text-gray-600 leading-relaxed mb-5">
               Through our flagship mission <strong className="text-green-800">Green Ring Bengaluru</strong>, Dhare Foundation
               aims to plant <strong>2 crore saplings</strong> in and around Bengaluru and <strong>3 crore saplings</strong> across the rest
               of Karnataka — making it a <strong>5 crore sapling ecological movement</strong>.

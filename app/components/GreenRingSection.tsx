@@ -12,9 +12,9 @@ const outcomes = [
 
 export default function GreenRingSection() {
   return (
-    <section id="green-ring" className="py-16 sm:py-24 bg-green-50">
+    <section id="green-ring" className="py-10 sm:py-14 bg-green-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Text */}
           <div>
             <div className="inline-flex items-center gap-2 bg-green-200 rounded-full px-4 py-1.5 mb-5">
@@ -26,15 +26,15 @@ export default function GreenRingSection() {
             <p className="text-2xl font-semibold text-green-700 mb-5">
               2 Crore Saplings for Bengaluru's Ecological Future
             </p>
-            <p className="text-gray-600 leading-relaxed mb-6">
+            <p className="text-gray-600 leading-relaxed mb-4">
               Bengaluru is expanding rapidly. Construction, traffic, concrete surfaces, dust pollution, shrinking open
               spaces, and loss of native vegetation have created serious pressure on the city's environment.
             </p>
-            <p className="text-gray-600 leading-relaxed mb-8">
+            <p className="text-gray-600 leading-relaxed mb-4">
               The Green Ring Bengaluru initiative aims to create a <strong className="text-green-800">green ecological belt</strong> in
               and around Bengaluru by planting <strong className="text-green-800">2 crore native saplings</strong>, helping create:
             </p>
-            <div className="space-y-2 mb-8">
+            <div className="space-y-2 mb-4">
               {outcomes.map((outcome) => (
                 <div key={outcome} className="flex items-center gap-3">
                   <span className="w-5 h-5 bg-green-600 text-white rounded-full flex items-center justify-center text-xs shrink-0">✓</span>

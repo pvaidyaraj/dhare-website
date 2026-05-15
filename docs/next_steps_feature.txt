@@ -1,0 +1,52 @@
+DHARE WEBSITE — NEXT STEPS: SITE CO-ORDINATOR FEATURE
+=======================================================
+Date: 14 May 2026
+
+FEATURE: SITE CO-ORDINATOR ROLE
+---------------------------------
+Requirements:
+- A role called "Site Co-ordinator" who can:
+  - Click a selfie with a sapling during site inspection
+  - Upload the photo with GPS coordinates
+  - Fill and submit a site inspection form
+- Site co-ordinator profiles accessible through a login
+- Site administrator has a separate login to view all co-ordinators and their records
+
+WHAT WE ALREADY HAVE (no new cost):
+- Supabase Auth — handles login, sessions, JWT tokens (just needs to be enabled)
+- Supabase Storage — for storing inspection photos (free tier: 1GB)
+- Supabase PostgreSQL — for storing inspection records (already in use)
+- Next.js middleware — for protecting routes (built into Next.js)
+- React Hook Form + Zod — for forms (already in use)
+
+NEW NPM PACKAGES NEEDED (2 only):
+- exifr — reads GPS coordinates embedded in phone photos (EXIF metadata)
+- browser-image-compression — compresses photos before upload to stay within Supabase Storage quota
+
+BROWSER APIs NEEDED (built-in, no install):
+- navigator.geolocation — gets live GPS coordinates from device
+- <input type="file" accept="image/*" capture="user"> — opens front camera on mobile for selfie
+
+WHAT NEEDS TO BE BUILT:
+1. Supabase Auth — enable email/password login
+2. Profiles table in Supabase — with a "role" column (coordinator / admin)
+3. Next.js middleware — protect /coordinator and /admin routes, redirect to login if not authenticated
+4. Coordinator login + dashboard — login page + page showing their own inspection history
+5. Site inspection form — captures site name, site details, GPS coordinates, selfie photo, submits to Supabase
+6. Admin login + dashboard — shows all co-ordinators, their profiles, and all inspection records with photos and GPS data
+
+OPTIONAL (nice to have):
+- Leaflet.js (free, uses OpenStreetMap) — plot inspection GPS locations on a map in the admin dashboard. No API key or billing needed.
+- Google Maps — more polished alternative but requires a Google Cloud account with billing enabled.
+
+SUPABASE STORAGE NOTE:
+- Free tier: 1 GB
+- Uncompressed phone photo: 3–5 MB → ~200–300 photos free
+- With browser-image-compression (each photo ~200–400 KB): 2,500–5,000 photos free
+- If it scales up: $0.021/GB/month (very affordable)
+
+SUMMARY:
+- No new accounts or paid tools needed
+- Everything can be done within the current Supabase free tier
+- Two small npm packages (exifr, browser-image-compression)
+- New pages added to the existing Next.js app

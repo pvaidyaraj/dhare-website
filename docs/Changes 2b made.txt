@@ -1,0 +1,36 @@
+Dhare Website changes:
+- Logo to be updated with the Dhare_Logo_New.png file
+- 5 crore sampling text at the top of the page to be enlarged
+- Our impact goal section with numbers to be visible when the home page loads 
+- 'Donate Now' to show bank details as provided in the donation_bank_details.txt under the dhare_documents folder
+- Update the donation amounts to ₹175, ₹395, ₹700 instead of ₹210, ₹700 and ₹1000
+- Remove 'In Partnership With Karnataka State Legal Services Authority' 
+- Add the Media Coverage section to the website at an appropriate place. The images of news reports to be taken from 'media_coverage' folder. The layout of the new coverage images must be professional and not haphazard.
+
+Changes to Documents section:
+- A click on 80G Certificate should open a pop-up with 80G_certificate.pdf, which is under the dhare_documents folder
+- A click on PAN should open a pop-up with PAN.jpg, which is under the dhare_documents folder
+- A click on CSR Registration should open a pop-up with csr_registration.jpg, which is under the dhare_documents folder
+- Change NGO Darpan to Darpan. A Click on Darpan must open a pop-up with darpan_id.jpg, which is under the dhare_documents folder
+- Remove KSLSA MoU link and text
+
+Changes to the volunteer registration page:
+- Change image to dhare_volunteer.jpg from images folder
+- In the registration form, Skills & Areas of Interest to include "Any other interests" text box.
+- Human/Not a Robot check to be included before Registering as an volunteer. 
+- In association with KSLSA to be removed from volunteer registration page.  
+
+
+
+- Our impact goal section with numbers to be visible at the top of the page, just below 5 Crore Sapling Ecological Movement. The text size of the main section can be reduced to accommodate the our impact goal section. 
+- There are lot of extra spaces throughout the site. Remove extra space in between sections and within the sections.
+- Donate menu on the top of the page and the Donate Now button at the top right do nothing on click. A click must lead to Support Our Mission section. 
+- The media coverage images look like a dump. Change the media coverage section into a image slider or carousel. 
+- Link to Media Coverage section must be added to the quick links and to the top menu
+
+
+Next Stage
+- Site coordinator to be able to click selfie with sampling and upload the photo with GPS coordinates during site inspection (refer to form)
+- Site coordinator profile to be created
+- Site coordinator must be able to view his/her records
+- Page to contact Dhare if they have land to plant  

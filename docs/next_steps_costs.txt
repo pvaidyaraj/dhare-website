@@ -1,0 +1,211 @@
+DHARE WEBSITE — COST & SUBSCRIPTION BREAKDOWN
+===============================================
+Date: 14 May 2026
+
+This file lists every service used, what the free tier includes, why
+costs would be triggered, and what it would cost if limits are exceeded.
+
+─────────────────────────────────────────────────────────────────────────
+1. SUPABASE (supabase.com)
+─────────────────────────────────────────────────────────────────────────
+Supabase is the backend platform used for the database, file storage,
+and user login. The website already runs on Supabase's free tier.
+
+FREE TIER INCLUDES:
+  - Database (PostgreSQL): 500 MB storage
+  - File Storage: 1 GB (for photos)
+  - Authentication: Up to 50,000 logged-in users per month
+  - API requests: 500,000 per month
+  - Bandwidth: 5 GB per month
+  - 2 projects maximum on free account
+  - Projects are paused after 1 week of inactivity (free tier only)
+
+WHY COSTS WOULD BE TRIGGERED:
+  - Storage exceeds 1 GB: Each site inspection photo uploaded by a
+    co-ordinator takes up space. If many co-ordinators upload photos
+    regularly, storage fills up over time.
+  - Database exceeds 500 MB: Unlikely for this use case — text records
+    are tiny. Only a concern if tens of thousands of rows are stored.
+  - API requests exceed 500,000/month: Each page load, login, photo
+    upload, and form submission counts as API calls. Very unlikely to
+    hit this for an internal tool used by a small team.
+  - Project inactivity: On the free tier, if the site is not visited for
+    7 days, the project is paused and needs manual reactivation. This is
+    not a problem for the public website (it gets regular traffic) but
+    worth knowing.
+
+PAID PLAN (Pro): $25/month (~Rs. 2,100/month)
+  - Database: 8 GB
+  - Storage: 100 GB
+  - Auth: Unlimited users
+  - API requests: Unlimited
+  - No project pausing
+  - Daily database backups included
+
+VERDICT: Free tier is sufficient for now. Upgrade only if storage
+exceeds 1 GB or the team grows significantly.
+
+─────────────────────────────────────────────────────────────────────────
+2. VERCEL (vercel.com)
+─────────────────────────────────────────────────────────────────────────
+Vercel hosts the website. Currently on the free Hobby plan.
+
+FREE TIER INCLUDES:
+  - Unlimited deployments
+  - 100 GB bandwidth per month
+  - Serverless function execution: 100 GB-hours per month
+  - Build time: 6,000 minutes per month
+  - 1 team member (Hobby plan is for personal/non-commercial use)
+  - Custom domains: Supported
+  - SSL certificates: Included
+
+WHY COSTS WOULD BE TRIGGERED:
+  - Commercial use: Vercel's Hobby (free) plan is officially for
+    non-commercial personal projects. An NGO website could be considered
+    non-commercial, but if Dhare Foundation is registered as a company
+    or generates revenue through the site, Vercel may require an upgrade.
+  - Bandwidth exceeds 100 GB/month: Very unlikely unless the site goes
+    viral. A typical NGO website uses 1–5 GB/month.
+  - Team collaboration: If multiple developers need to access and deploy
+    the Vercel project simultaneously, the free plan only supports 1
+    member. A team would require the Pro plan.
+  - Serverless function limits: The volunteer form submission and other
+    backend actions use serverless functions. 100 GB-hours is extremely
+    generous and will not be exceeded.
+
+PAID PLAN (Pro): $20/month (~Rs. 1,700/month) per member
+  - 1 TB bandwidth
+  - Unlimited team members
+  - Advanced analytics
+  - Priority support
+  - Password-protected deployments
+
+VERDICT: Free Hobby plan is sufficient for Dhare Foundation's current
+usage. The only reason to upgrade would be if a second developer joins
+or Vercel flags it as commercial use.
+
+─────────────────────────────────────────────────────────────────────────
+3. SUPABASE AUTH — EMAIL DELIVERY
+─────────────────────────────────────────────────────────────────────────
+When a co-ordinator logs in or resets their password, Supabase sends
+them an email (e.g., a verification link or OTP). Supabase uses its
+own built-in email service for this on the free tier.
+
+FREE TIER INCLUDES:
+  - 2 emails per hour (rate limit)
+  - Basic email templates for login, password reset, email verification
+  - No custom "from" address — emails come from a Supabase domain
+
+WHY COSTS WOULD BE TRIGGERED:
+  - More than 2 emails/hour: If several co-ordinators try to log in or
+    reset passwords at the same time, some emails may be delayed or
+    dropped due to the 2/hour rate limit.
+  - Custom sender address needed: If Dhare Foundation wants emails to
+    come from "noreply@dharefoundation.org" instead of a Supabase
+    address, a third-party email provider must be connected.
+  - Deliverability concerns: Supabase's built-in emails sometimes land
+    in spam folders. A dedicated email service improves deliverability.
+
+RECOMMENDED THIRD-PARTY EMAIL SERVICE IF NEEDED: Resend (resend.com)
+  Free tier: 3,000 emails/month, 100/day
+  Paid plan: $20/month for 50,000 emails/month (~Rs. 1,700/month)
+  Can send from a custom domain (e.g., noreply@dharefoundation.org)
+
+ALTERNATIVES:
+  - SendGrid: Free up to 100 emails/day. Paid from $19.95/month.
+  - Postmark: No free tier. Starts at $15/month for 10,000 emails.
+
+VERDICT: Supabase's built-in email is fine for a small team of
+co-ordinators (under 10 people). If co-ordinators report not receiving
+login emails, switch to Resend's free tier.
+
+─────────────────────────────────────────────────────────────────────────
+4. GOOGLE MAPS (maps.google.com / Google Cloud Platform)
+─────────────────────────────────────────────────────────────────────────
+Google Maps would be used to display GPS co-ordinates of site
+inspections on a map in the admin dashboard. This is optional.
+
+FREE TIER INCLUDES:
+  - $200 of free Google Maps API credits per month
+  - Maps JavaScript API: ~28,000 free map loads/month
+    (each page view with a map = 1 load)
+  - Static Maps API: ~100,000 free image requests/month
+  - Requires a Google Cloud account with a valid credit card on file
+    even to use the free tier
+
+WHY COSTS WOULD BE TRIGGERED:
+  - Credit card required upfront: Google requires billing details even
+    for free usage. If the $200 monthly credit is exceeded, charges
+    begin automatically without a separate warning.
+  - Map loads exceed 28,000/month: For an internal admin tool with a
+    small number of users, this limit will almost certainly never be hit.
+  - Other Google APIs accidentally enabled: The Google Cloud console
+    has many APIs. If other APIs are accidentally enabled and called,
+    unexpected charges can occur.
+
+COST BEYOND FREE QUOTA:
+  - Maps JavaScript API: $7 per 1,000 additional map loads
+  - Static Maps API: $2 per 1,000 additional requests
+
+RECOMMENDATION: Avoid Google Maps entirely. Use Leaflet.js instead
+(see below). It is free, open-source, and does not require a credit
+card or account of any kind.
+
+─────────────────────────────────────────────────────────────────────────
+5. LEAFLET.JS + OPENSTREETMAP (leafletjs.com / openstreetmap.org)
+─────────────────────────────────────────────────────────────────────────
+Leaflet.js is a free, open-source map library. It uses OpenStreetMap
+(community-maintained, like Wikipedia for maps) as its map tiles.
+
+FREE TIER INCLUDES:
+  - Completely free — no account, no API key, no credit card
+  - Unlimited map loads
+  - No rate limits for normal usage
+  - Full-featured interactive maps (zoom, pan, markers, etc.)
+
+WHY COSTS WOULD BE TRIGGERED:
+  - Never, for standard use. OpenStreetMap tile servers are free for
+    reasonable usage (not high-traffic commercial applications).
+  - If the admin dashboard scales to millions of map views (extremely
+    unlikely for an NGO internal tool), a paid tile provider like
+    Mapbox could be considered. Mapbox free tier: 50,000 map views/month.
+
+VERDICT: Use Leaflet.js. Zero cost, zero risk, perfectly capable for
+displaying site inspection GPS pins on a map.
+
+─────────────────────────────────────────────────────────────────────────
+6. NPM PACKAGES (exifr, browser-image-compression)
+─────────────────────────────────────────────────────────────────────────
+These are open-source software libraries installed into the project.
+
+  - exifr: Free, MIT licence. No account, no API, no cost ever.
+    Used to read GPS data already embedded in photos taken on phones.
+
+  - browser-image-compression: Free, MIT licence. No account, no cost.
+    Used to shrink photo file sizes before uploading to Supabase Storage,
+    reducing storage usage and keeping the project within the free tier.
+
+─────────────────────────────────────────────────────────────────────────
+OVERALL COST SUMMARY
+─────────────────────────────────────────────────────────────────────────
+
+  Service             Free Limit                  Cost if exceeded
+  ──────────────────────────────────────────────────────────────────────
+  Supabase DB         500 MB storage              $25/month (Pro plan)
+  Supabase Storage    1 GB photos                 $0.021/GB/month
+  Supabase Auth       50,000 users/month          Included in Pro plan
+  Supabase API        500,000 requests/month      Included in Pro plan
+  Vercel Hosting      100 GB bandwidth/month      $20/member/month
+  Supabase Email      2 emails/hour               Resend free: 3,000/month
+  Google Maps         28,000 map loads/month      $7 per 1,000 loads
+  Leaflet.js          Unlimited                   Always free
+  npm packages        Unlimited                   Always free
+
+  For initial rollout (small team of co-ordinators): Rs. 0 / month
+  If storage grows beyond 1 GB:                    Rs. 50–200 / month
+  If full Supabase Pro upgrade needed:             Rs. 2,100 / month
+  If Vercel Pro needed (team use):                 Rs. 1,700 / month
+  Email via Resend (if Supabase email insufficient): Rs. 0–1,700 / month
+
+  Realistic cost for Dhare Foundation's scale: Rs. 0–200 / month
+  for the foreseeable future.

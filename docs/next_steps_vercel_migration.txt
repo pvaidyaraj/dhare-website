@@ -1,0 +1,90 @@
+DHARE WEBSITE — VERCEL MIGRATION TO ORGANISATION ACCOUNT
+==========================================================
+Date: 14 May 2026
+
+CURRENT SITUATION:
+  The website is hosted on Vercel under a personal account (pvaidyaraj).
+  This means the site is owned by an individual, not by Dhare Foundation
+  as an organisation.
+
+WHY AN ORGANISATION ACCOUNT IS BETTER:
+  - Ownership: The site is currently tied to one person's personal login.
+    If that person leaves or is unavailable, managing or transferring the
+    site becomes difficult.
+  - Shared access: An organisation account allows multiple people
+    (developers, technical volunteers) to deploy and manage the site
+    independently without sharing a personal login.
+  - Professional: The Vercel dashboard and deployment URLs reflect
+    "Dhare Foundation" instead of a personal username.
+  - Continuity: The foundation owns the project as an entity, not an
+    individual — better for long-term governance.
+
+STEPS TO MIGRATE (no code changes required):
+  Step 1 — Create a Vercel Team
+    Go to vercel.com → Settings → Create a Team.
+    Name it "Dhare Foundation". This creates the organisation account.
+
+  Step 2 — Transfer the project
+    In the personal Vercel account, open the dhare-website project →
+    Settings → Transfer Project → select the new Dhare Foundation team.
+    Vercel handles this with zero downtime. The live URL stays the same.
+
+  Step 3 — Reconnect GitHub (if needed)
+    After transfer, verify that the GitHub repository (dhare-website)
+    is still linked to the new team project for automatic deployments.
+    Re-link if necessary.
+
+  Step 4 — Check environment variables
+    After transfer, confirm the Supabase environment variables are
+    present in the new project settings:
+      - NEXT_PUBLIC_SUPABASE_URL
+      - SUPABASE_SERVICE_ROLE_KEY
+    These do not always carry over automatically during a transfer.
+
+  Step 5 — Add team members
+    Invite other admins or developers to the Vercel team so they can
+    manage deployments going forward.
+
+THE CATCH — COST:
+  Moving to an organisation (team) account requires Vercel's Pro plan.
+  Vercel does not offer a free team tier.
+
+  Plan         Cost                  Notes
+  ─────────────────────────────────────────────────────────────────────
+  Hobby        Free                  Personal accounts only, 1 member
+  Pro (Team)   $20/member/month      Required for organisation accounts
+               (~Rs. 1,700/month)
+
+  1 member on Pro  = $20/month (~Rs. 1,700/month)
+  2 members on Pro = $40/month (~Rs. 3,400/month)
+
+VERCEL NON-PROFIT / OPEN-SOURCE PROGRAM:
+  Vercel offers Pro plan features free or at a significant discount for
+  qualifying non-profit organisations and open-source projects.
+  Since Dhare Foundation is a registered NGO with an 80G certificate,
+  it is very likely to qualify.
+
+  How to apply:
+    - Go to vercel.com/support or search "Vercel non-profit program"
+    - Submit an application with proof of non-profit status
+    - The 80G certificate, NGO Darpan registration, or CSR registration
+      documents (already on the website) would serve as proof
+    - Approval typically takes a few days
+
+  If approved: Organisation account at no cost.
+  If not approved: Rs. 1,700/month for the Pro plan.
+
+ALTERNATIVE (FREE OPTION — NO MIGRATION NEEDED):
+  Create a shared Vercel login using a Dhare Foundation email address
+  (e.g., tech@dharefoundation.org) and transfer the project to that
+  personal account. This keeps the free Hobby plan while ensuring
+  the site is no longer tied to any one individual's personal account.
+  Limitation: Still only 1 member can access the dashboard at a time.
+
+RECOMMENDATION:
+  1. First, apply for Vercel's non-profit program. If approved, move
+     to an organisation account at no cost — best outcome.
+  2. If not approved, use the shared login approach
+     (tech@dharefoundation.org) as a free interim solution.
+  3. Upgrade to a paid Pro team only if multiple developers actively
+     need simultaneous access to the Vercel dashboard.

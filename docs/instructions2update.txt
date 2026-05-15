@@ -1,0 +1,39 @@
+STEPS TO UPDATE THE WEBSITE FROM ANOTHER LAPTOP
+=================================================
+
+1. INSTALL PREREQUISITES
+   - Node.js (v18+): https://nodejs.org
+   - Git: https://git-scm.com
+   - Claude Code (optional, for AI assistance): npm install -g @anthropic-ai/claude-code
+
+2. CLONE THE REPOSITORY
+   git clone https://github.com/pvaidyaraj/dhare-website.git
+   cd dhare-website
+
+3. INSTALL DEPENDENCIES
+   npm install
+
+4. SET UP ENVIRONMENT VARIABLES
+   Create a .env.local file in the project root with the Supabase credentials.
+   Copy the values from the existing .env.local on the original laptop:
+     D:\Dhare_Website\dhare_website_content\dhare-website\.env.local
+
+   OR, if you have the Vercel CLI, pull them automatically:
+     npm install -g vercel
+     vercel link       (links to your Vercel project)
+     vercel env pull   (downloads .env.local from Vercel)
+
+5. RUN LOCALLY TO TEST
+   npm run dev
+   Open http://localhost:3000 in your browser.
+
+6. MAKE YOUR CHANGES, THEN PUSH
+   git add .
+   git commit -m "describe your changes"
+   git push
+
+   Pushing to the master branch on GitHub will automatically trigger
+   a Vercel deployment -- no manual deploy needed.
+
+NOTE: The .env.local file is intentionally excluded from Git for security.
+      Step 4 is the only setup that requires credentials from the original machine.

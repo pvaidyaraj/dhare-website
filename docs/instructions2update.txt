@@ -37,3 +37,8 @@ STEPS TO UPDATE THE WEBSITE FROM ANOTHER LAPTOP
 
 NOTE: The .env.local file is intentionally excluded from Git for security.
       Step 4 is the only setup that requires credentials from the original machine.
+
+REPO STRUCTURE NOTES:
+  docs/            - Planning and content files (txt notes, Website_content.docx)
+  legal_documents/ - Charity documents (80G certificate, PAN, CSR registration,
+                     Darpan ID, CSR documents PDF, donation bank details)

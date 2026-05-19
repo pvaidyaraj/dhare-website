@@ -87,7 +87,7 @@ export default function TeamPage() {
                       src={d.image}
                       alt={d.name}
                       fill
-                      className="object-cover object-top"
+                      className="object-contain"
                       sizes="(max-width: 640px) 100vw, 220px"
                     />
                   </div>

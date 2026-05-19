@@ -88,7 +88,7 @@ export default function MediaCoverageSection() {
                 src={mediaItems[current].src}
                 alt={mediaItems[current].alt}
                 fill
-                className="object-cover"
+                className="object-contain"
                 sizes="100vw"
               />
             </button>

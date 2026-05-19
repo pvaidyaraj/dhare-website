@@ -3,6 +3,9 @@ import HeroSection from "./components/HeroSection";
 import AboutSection from "./components/AboutSection";
 import MoUSection from "./components/MoUSection";
 import GreenRingSection from "./components/GreenRingSection";
+import MajorProjectsSection from "./components/MajorProjectsSection";
+import WhyTreesSection from "./components/WhyTreesSection";
+import TraditionalPlantationSection from "./components/TraditionalPlantationSection";
 import WorkSection from "./components/WorkSection";
 import GallerySection from "./components/GallerySection";
 import MediaCoverageSection from "./components/MediaCoverageSection";
@@ -19,6 +22,9 @@ export default function Home() {
         <AboutSection />
         <MoUSection />
         <GreenRingSection />
+        <MajorProjectsSection />
+        <WhyTreesSection />
+        <TraditionalPlantationSection />
         <WorkSection />
         <GallerySection />
         <MediaCoverageSection />

@@ -30,7 +30,7 @@ export default function AboutSection() {
             <p className="text-gray-600 leading-relaxed mb-5">
               Through our flagship mission <strong className="text-green-800">Green Ring Bengaluru</strong>, Dhare Foundation
               aims to plant <strong>2 crore saplings</strong> in and around Bengaluru and <strong>3 crore saplings</strong> across the rest
-              of Karnataka — making it a <strong>5 crore sapling ecological movement</strong>.
+              of Karnataka — making it a <strong>5 crore sapling ecological movement</strong>. So far, we have planted over <strong className="text-green-800">25,000 saplings</strong> across Karnataka.
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {pillars.map((p) => (

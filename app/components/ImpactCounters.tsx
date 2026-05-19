@@ -45,7 +45,7 @@ export default function ImpactCounters() {
             >
               <div className="text-4xl mb-3">{counter.icon}</div>
               <p className="text-green-300 text-sm font-medium mb-1">{counter.label}</p>
-              <p className="text-3xl sm:text-4xl font-bold text-white mb-1">{counter.target}</p>
+              <p className="text-xl sm:text-3xl lg:text-4xl font-bold text-white mb-1 break-words">{counter.target}</p>
               <p className="text-green-400 text-xs">{counter.description}</p>
             </div>
           ))}

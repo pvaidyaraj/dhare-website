@@ -8,6 +8,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  icons: {
+    icon: "/logos/dhare-logo-new.png",
+    shortcut: "/logos/dhare-logo-new.png",
+    apple: "/logos/dhare-logo-new.png",
+  },
   title: "Dhare Foundation — Creating Green, Living, Biodiverse Karnataka",
   description:
     "Dhare Foundation is working to plant 5 crore native saplings across Karnataka through Miyawaki forests, tank rejuvenation, and community-led ecological restoration.",

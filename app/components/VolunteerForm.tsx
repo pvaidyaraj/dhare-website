@@ -47,6 +47,7 @@ const AVAILABILITY_OPTIONS = [
   "Weekday Evenings",
   "Saturday",
   "Sunday",
+  "Full-Time",
   "Flexible / Any Time",
 ];
 

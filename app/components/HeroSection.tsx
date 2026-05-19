@@ -26,7 +26,7 @@ export default function HeroSection() {
         {/* Badge */}
         <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-5 py-2.5 mb-5">
           <span className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse shrink-0" />
-          <span className="text-green-300 text-base sm:text-lg font-semibold">5 Crore Sapling Ecological Movement</span>
+          <span className="text-green-300 text-sm sm:text-lg font-semibold">5 Crore Sapling Ecological Movement</span>
         </div>
 
         {/* Impact counters — right below badge */}
@@ -36,7 +36,7 @@ export default function HeroSection() {
             {counters.map((c) => (
               <div key={c.label} className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl py-4 px-3 sm:py-5 sm:px-4">
                 <div className="text-2xl sm:text-3xl mb-2">{c.icon}</div>
-                <p className="text-xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight">{c.value}</p>
+                <p className="text-xs sm:text-2xl lg:text-3xl font-bold text-white leading-tight break-all">{c.value}</p>
                 <p className="text-green-300 text-xs sm:text-sm font-medium mt-1.5 leading-tight">{c.label}</p>
                 <p className="text-green-400/80 text-xs mt-0.5 leading-tight">{c.sub}</p>
               </div>
@@ -49,6 +49,12 @@ export default function HeroSection() {
           Creating Green, Living,
           <span className="block text-green-400 mt-1">Biodiverse Karnataka</span>
         </h1>
+
+        {/* Saplings planted stat */}
+        <div className="inline-flex items-center gap-3 bg-green-600/80 backdrop-blur-sm border border-green-400/50 rounded-2xl px-6 py-3 mb-4">
+          <span className="w-2.5 h-2.5 bg-green-300 rounded-full animate-pulse shrink-0" />
+          <span className="text-white font-bold text-base sm:text-2xl lg:text-3xl">🌱 25,000 saplings planted so far</span>
+        </div>
 
         {/* Subheadline */}
         <p className="text-base sm:text-lg text-gray-200 max-w-2xl mx-auto leading-relaxed mb-2">

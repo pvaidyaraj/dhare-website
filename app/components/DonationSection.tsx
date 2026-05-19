@@ -154,17 +154,6 @@ export default function DonationSection() {
           </button>
         </div>
 
-        {/* Payment methods */}
-        <div className="mt-5 text-center">
-          <p className="text-green-400 text-xs uppercase tracking-widest mb-3">Payment Options</p>
-          <div className="flex flex-wrap justify-center gap-3">
-            {["UPI", "Debit Card", "Credit Card", "Net Banking", "QR Code", "Bank Transfer", "CSR Transfer"].map((m) => (
-              <span key={m} className="bg-green-800/50 border border-green-700 text-green-300 text-xs px-3 py-1.5 rounded-full">
-                {m}
-              </span>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );

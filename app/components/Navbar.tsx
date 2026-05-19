@@ -4,18 +4,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+const aboutSubmenu = [
+  { href: "/team", label: "Our Team" },
+];
+
+const navLinks = [
+  { href: "#about", label: "About", submenu: aboutSubmenu },
+  { href: "#green-ring", label: "Green Ring" },
+  { href: "#projects", label: "Our Work" },
+  { href: "#gallery", label: "Gallery" },
+  { href: "#media", label: "Media" },
+  { href: "#donate", label: "Donate" },
+  { href: "#volunteer", label: "Volunteer" },
+];
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const navLinks = [
-    { href: "#about", label: "About" },
-    { href: "#green-ring", label: "Green Ring" },
-    { href: "#work", label: "Our Work" },
-    { href: "#gallery", label: "Gallery" },
-    { href: "#media", label: "Media" },
-    { href: "#donate", label: "Donate" },
-    { href: "#volunteer", label: "Volunteer" },
-  ];
+  const [aboutOpen, setAboutOpen] = useState(false);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-green-100 shadow-sm">
@@ -39,15 +44,49 @@ export default function Navbar() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-5">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="text-sm font-medium text-gray-700 hover:text-green-700 transition-colors"
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) =>
+              link.submenu ? (
+                <div
+                  key={link.href}
+                  className="relative"
+                  onMouseEnter={() => setAboutOpen(true)}
+                  onMouseLeave={() => setAboutOpen(false)}
+                >
+                  <a
+                    href={link.href}
+                    className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-green-700 transition-colors"
+                  >
+                    {link.label}
+                    <svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </a>
+                  {aboutOpen && (
+                    <div className="absolute top-full left-0 w-44 pt-1 z-50">
+                      <div className="bg-white border border-gray-100 rounded-xl shadow-lg py-1.5">
+                        {link.submenu.map((sub) => (
+                          <Link
+                            key={sub.href}
+                            href={sub.href}
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
+                          >
+                            {sub.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm font-medium text-gray-700 hover:text-green-700 transition-colors"
+                >
+                  {link.label}
+                </a>
+              )
+            )}
           </div>
 
           {/* CTA + Hamburger */}
@@ -77,7 +116,30 @@ export default function Navbar() {
         {/* Mobile Menu */}
         {menuOpen && (
           <div className="md:hidden border-t border-green-100 py-3 space-y-1">
-            {navLinks.map((link) => (
+            {/* About with submenu expanded */}
+            <div>
+              <a
+                href="#about"
+                onClick={() => setMenuOpen(false)}
+                className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition-colors"
+              >
+                About
+              </a>
+              <div className="ml-5 mt-1 space-y-1 border-l-2 border-green-100 pl-3">
+                {aboutSubmenu.map((sub) => (
+                  <Link
+                    key={sub.href}
+                    href={sub.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="block py-1.5 text-sm text-gray-600 hover:text-green-700 transition-colors"
+                  >
+                    {sub.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {navLinks.filter((l) => !l.submenu).map((link) => (
               <a
                 key={link.href}
                 href={link.href}

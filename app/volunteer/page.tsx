@@ -33,7 +33,7 @@ export default function VolunteerPage() {
           <span className="text-white/30 text-sm">·</span>
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/logos/dhare-logo.jpeg"
+              src="/logos/dhare-logo-new.png"
               alt="Dhare Foundation"
               width={28}
               height={28}

@@ -4,15 +4,20 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 
 const mediaItems = [
-  { src: "/images/media/media1.jpg", alt: "Dhare Foundation media coverage 1" },
-  { src: "/images/media/media2.jpg", alt: "Dhare Foundation media coverage 2" },
-  { src: "/images/media/media3.jpg", alt: "Dhare Foundation media coverage 3" },
-  { src: "/images/media/media4.jpg", alt: "Dhare Foundation media coverage 4" },
-  { src: "/images/media/media5.jpg", alt: "Dhare Foundation media coverage 5" },
-  { src: "/images/media/media6.jpg", alt: "Dhare Foundation media coverage 6" },
-  { src: "/images/media/media7.jpg", alt: "Dhare Foundation media coverage 7" },
-  { src: "/images/media/media8.jpg", alt: "Dhare Foundation media coverage 8" },
-  { src: "/images/media/media9.jpg", alt: "Dhare Foundation media coverage 9" },
+  {
+    src: "/images/media/NSFelicitation.jpg",
+    alt: "Union Finance Minister Nirmala Sitharaman felicitates Dhare Foundation Director D.M. Purnesh",
+    caption: "Union Finance Minister Nirmala Sitharaman recognized the achievements of Dhare Foundation and honored its Director, D.M. Purnesh, during an event held in Bangalore on August 13, 2022.",
+  },
+  { src: "/images/media/media1.jpg", alt: "Dhare Foundation media coverage 1", caption: "" },
+  { src: "/images/media/media2.jpg", alt: "Dhare Foundation media coverage 2", caption: "" },
+  { src: "/images/media/media3.jpg", alt: "Dhare Foundation media coverage 3", caption: "" },
+  { src: "/images/media/media4.jpg", alt: "Dhare Foundation media coverage 4", caption: "" },
+  { src: "/images/media/media5.jpg", alt: "Dhare Foundation media coverage 5", caption: "" },
+  { src: "/images/media/media6.jpg", alt: "Dhare Foundation media coverage 6", caption: "" },
+  { src: "/images/media/media7.jpg", alt: "Dhare Foundation media coverage 7", caption: "" },
+  { src: "/images/media/media8.jpg", alt: "Dhare Foundation media coverage 8", caption: "" },
+  { src: "/images/media/media9.jpg", alt: "Dhare Foundation media coverage 9", caption: "" },
 ];
 
 export default function MediaCoverageSection() {
@@ -154,7 +159,10 @@ export default function MediaCoverageSection() {
               height={675}
               className="object-contain w-full max-h-[85vh] rounded-lg"
             />
-            <p className="text-white/50 text-xs text-center mt-2">{lightbox + 1} / {total}</p>
+            {mediaItems[lightbox].caption && (
+              <p className="text-white/80 text-sm text-center mt-3 px-4 leading-relaxed">{mediaItems[lightbox].caption}</p>
+            )}
+            <p className="text-white/40 text-xs text-center mt-2">{lightbox + 1} / {total}</p>
           </div>
           <button
             onClick={() => setLightbox((l) => (l! + 1) % total)}

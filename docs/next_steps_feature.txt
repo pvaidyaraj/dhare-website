@@ -12,6 +12,26 @@ Requirements:
 - Site co-ordinator profiles accessible through a login
 - Site administrator has a separate login to view all co-ordinators and their records
 
+FEATURE: DONOR DETAILS AND ROLE
+-------------------------------
+- Donor form to capture details just like the volunteer registration form. The donor form on click of 'Donate button' to have the following details:
+	1) Name
+	2) Mobile 
+	3) Email ID
+	4) PAN (for 80G receipt) - Optional field
+	5) Amount
+- Payment Gateway for donation (via Razorpay)
+- Provide option to choose the number of saplings
+
+FEATURE: DISTRICT SEARCH
+------------------------
+District-wise Search button to check all our works which includes photos, testimonial etc
+- Initial page displays Karnataka map with work locations highlighted (in tree icon). Brief of district-wise work will be displayed
+- On click of icon, planting work at that location will be displayed
+- A separate dropdown (below the brief text) will allow users to select the district (List only districts where work has happened)
+- Database to be created to capture donor details 
+- Section just above bottom section to display "Supported by" - with logos of orgs and companies supporting Dhare
+
 WHAT WE ALREADY HAVE (no new cost):
 - Supabase Auth — handles login, sessions, JWT tokens (just needs to be enabled)
 - Supabase Storage — for storing inspection photos (free tier: 1GB)

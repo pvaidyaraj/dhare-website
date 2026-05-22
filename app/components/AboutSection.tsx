@@ -43,6 +43,17 @@ export default function AboutSection() {
                 </div>
               ))}
             </div>
+
+            {/* Partnership block */}
+            <div className="mt-6 flex items-start gap-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl px-5 py-4 shadow-sm">
+              <div className="flex-shrink-0 w-10 h-10 bg-green-700 rounded-full flex items-center justify-center text-white text-lg">
+                🤝
+              </div>
+              <div>
+                <p className="text-green-700 text-xs font-semibold uppercase tracking-widest mb-0.5">Official Partnership</p>
+                <p className="text-gray-800 text-sm font-semibold leading-snug">MoU with Karnataka State Legal Services Authority</p>
+              </div>
+            </div>
           </div>
 
           {/* Image */}
@@ -55,11 +66,7 @@ export default function AboutSection() {
                 className="object-cover"
               />
             </div>
-            {/* Floating card */}
-            <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-lg p-4 border border-green-100 max-w-[200px]">
-              <p className="text-green-700 text-xs font-semibold uppercase tracking-wide mb-1">Partnership</p>
-              <p className="text-gray-800 text-sm font-bold leading-tight">MoU with Karnataka State Legal Services Authority</p>
-            </div>
+
           </div>
         </div>
       </div>

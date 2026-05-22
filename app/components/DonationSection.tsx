@@ -12,7 +12,7 @@ type DonationTier = {
 
 const tiers: DonationTier[] = [
   {
-    amount: "₹175",
+    amount: "₹200",
     label: "Plant a Sapling",
     description: "Prepare Soil. Plant Life.",
     features: ["Soil preparation", "Native sapling plantation"],

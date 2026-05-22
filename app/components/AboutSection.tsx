@@ -13,39 +13,41 @@ export default function AboutSection() {
   return (
     <section id="about" className="py-8 sm:py-10 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch">
           {/* Text */}
-          <div>
-            <p className="text-green-700 font-semibold text-sm uppercase tracking-widest mb-3">
-              About Dhare Foundation
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight mb-4">
-              Let Karnataka Breathe Again
-            </h2>
-            <p className="text-gray-600 text-base leading-relaxed mb-4">
-              Dhare Foundation is working to restore Karnataka's ecological balance. Our mission is to create green spaces
-              that are not just tree plantations, but <strong className="text-green-800">living habitats</strong> for birds, butterflies,
-              bees, insects, soil organisms, and future generations.
-            </p>
-            <p className="text-gray-600 leading-relaxed mb-5">
-              Through our flagship mission <strong className="text-green-800">Green Ring Bengaluru</strong>, Dhare Foundation
-              aims to plant <strong>2 crore saplings</strong> in and around Bengaluru and <strong>3 crore saplings</strong> across the rest
-              of Karnataka — making it a <strong>5 crore sapling ecological movement</strong>. So far, we have planted over <strong className="text-green-800">25,000 saplings</strong> across Karnataka.
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {pillars.map((p) => (
-                <div
-                  key={p.label}
-                  className="flex items-center gap-2 bg-green-50 border border-green-100 rounded-xl px-3 py-2"
-                >
-                  <span className="text-xl">{p.icon}</span>
-                  <span className="text-sm font-medium text-green-800">{p.label}</span>
-                </div>
-              ))}
+          <div className="flex flex-col justify-between">
+            <div>
+              <p className="text-green-700 font-semibold text-sm uppercase tracking-widest mb-2">
+                About Dhare Foundation
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight mb-3">
+                Let Karnataka Breathe Again
+              </h2>
+              <p className="text-gray-600 text-base leading-relaxed mb-3">
+                Dhare Foundation is working to restore Karnataka's ecological balance. Our mission is to create green spaces
+                that are not just tree plantations, but <strong className="text-green-800">living habitats</strong> for birds, butterflies,
+                bees, insects, soil organisms, and future generations.
+              </p>
+              <p className="text-gray-600 leading-relaxed mb-4">
+                Through our flagship mission <strong className="text-green-800">Green Ring Bengaluru</strong>, Dhare Foundation
+                aims to plant <strong>2 crore saplings</strong> in and around Bengaluru and <strong>3 crore saplings</strong> across the rest
+                of Karnataka — making it a <strong>5 crore sapling ecological movement</strong>. So far, we have planted over <strong className="text-green-800">25,000 saplings</strong> across Karnataka.
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {pillars.map((p) => (
+                  <div
+                    key={p.label}
+                    className="flex items-center gap-2 bg-green-50 border border-green-100 rounded-xl px-3 py-2"
+                  >
+                    <span className="text-xl">{p.icon}</span>
+                    <span className="text-sm font-medium text-green-800">{p.label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Partnership block */}
-            <div className="mt-6 flex items-start gap-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl px-5 py-4 shadow-sm">
+            <div className="mt-4 flex items-start gap-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl px-5 py-4 shadow-sm">
               <div className="flex-shrink-0 w-10 h-10 bg-green-700 rounded-full flex items-center justify-center text-white text-lg">
                 🤝
               </div>
@@ -57,8 +59,8 @@ export default function AboutSection() {
           </div>
 
           {/* Image */}
-          <div className="relative">
-            <div className="relative h-80 sm:h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-xl">
+          <div className="relative min-h-[320px] sm:min-h-[400px]">
+            <div className="relative h-full rounded-2xl overflow-hidden shadow-xl">
               <Image
                 src="/images/community-volunteer.jpeg"
                 alt="Community member with native sapling"
@@ -66,7 +68,6 @@ export default function AboutSection() {
                 className="object-cover"
               />
             </div>
-
           </div>
         </div>
       </div>

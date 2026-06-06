@@ -20,6 +20,7 @@ const schema = z.object({
     .number({ message: "Please enter a number" })
     .int("Enter a whole number")
     .min(51, "Minimum request is more than 50 saplings"),
+  not_a_robot: z.literal(true, { message: "Please confirm you are not a robot" }),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -34,9 +35,10 @@ export default function SaplingRegistrationForm() {
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: { not_a_robot: undefined },
   });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async ({ not_a_robot: _, ...data }: FormData) => {
     setServerError("");
     const result = await submitSaplingRegistration(data);
     if (result.success) {
@@ -174,6 +176,25 @@ export default function SaplingRegistrationForm() {
         {errors.saplings_count && (
           <p className="text-red-500 text-xs mt-0.5">{errors.saplings_count.message}</p>
         )}
+      </div>
+
+      {/* Human verification */}
+      <div className={`flex items-start gap-3 p-4 rounded-xl border ${errors.not_a_robot ? "border-red-300 bg-red-50" : "border-gray-200 bg-gray-50"}`}>
+        <input
+          id="not_a_robot"
+          type="checkbox"
+          {...register("not_a_robot")}
+          className="mt-0.5 w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-500 cursor-pointer shrink-0"
+        />
+        <div>
+          <label htmlFor="not_a_robot" className="text-sm font-medium text-gray-700 cursor-pointer select-none">
+            I am not a robot
+          </label>
+          <p className="text-xs text-gray-500 mt-0.5">Please confirm you are a human before submitting.</p>
+          {errors.not_a_robot && (
+            <p className="mt-1 text-sm text-red-600">{errors.not_a_robot.message}</p>
+          )}
+        </div>
       </div>
 
       {serverError && (

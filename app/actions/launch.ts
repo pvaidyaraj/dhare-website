@@ -1,9 +1,10 @@
 "use server";
 
+import { unstable_noStore as noStore } from "next/cache";
 import { createServerClient } from "@/lib/supabase";
-import { redirect } from "next/navigation";
 
 export async function getLaunchActive(): Promise<boolean> {
+  noStore();
   try {
     const supabase = createServerClient();
     const { data } = await supabase
@@ -17,13 +18,13 @@ export async function getLaunchActive(): Promise<boolean> {
   }
 }
 
-export async function completeLaunch() {
+export async function completeLaunch(): Promise<{ success: boolean }> {
   const supabase = createServerClient();
-  await supabase
+  const { error } = await supabase
     .from("site_settings")
     .update({ launch_active: false })
     .eq("id", true);
-  redirect("/");
+  return { success: !error };
 }
 
 export async function reactivateLaunch() {

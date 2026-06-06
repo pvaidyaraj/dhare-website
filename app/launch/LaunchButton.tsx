@@ -8,7 +8,13 @@ export default function LaunchButton() {
 
   async function handleLaunch() {
     setLaunching(true);
-    await completeLaunch();
+    const result = await completeLaunch();
+    if (result.success) {
+      // Hard navigation ensures the home page is fetched fresh from the server
+      window.location.href = "/";
+    } else {
+      setLaunching(false);
+    }
   }
 
   return (

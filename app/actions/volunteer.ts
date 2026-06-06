@@ -10,7 +10,8 @@ const volunteerSchema = z.object({
     .int("Age must be a whole number")
     .min(16, "Must be at least 16 years old")
     .max(100, "Please enter a valid age"),
-  city: z.string().min(2, "City is required"),
+  district: z.string().min(2, "District is required"),
+  full_address: z.string().min(5, "Please enter your full address"),
   phone: z
     .string()
     .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
@@ -45,7 +46,8 @@ export async function submitVolunteerForm(
   const { error } = await supabase.from("volunteer_registrations").insert({
     full_name: parsed.data.full_name,
     age: parsed.data.age,
-    city: parsed.data.city,
+    district: parsed.data.district,
+    full_address: parsed.data.full_address,
     phone: parsed.data.phone,
     email: parsed.data.email,
     skills: parsed.data.skills,

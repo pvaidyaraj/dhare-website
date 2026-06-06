@@ -13,7 +13,8 @@ const schema = z.object({
     .int("Age must be a whole number")
     .min(16, "Must be at least 16 years old")
     .max(100, "Please enter a valid age"),
-  city: z.string().min(2, "City is required"),
+  district: z.string().min(2, "District is required"),
+  full_address: z.string().min(5, "Please enter your full address"),
   phone: z
     .string()
     .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
@@ -159,19 +160,34 @@ export default function VolunteerForm() {
         </div>
       </div>
 
-      {/* Row 2: City + Phone */}
+      {/* Row 2: District + Full Address */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="city" required>City</Label>
+          <Label htmlFor="district" required>District</Label>
           <input
-            id="city"
+            id="district"
             type="text"
-            placeholder="e.g. Bengaluru"
-            {...register("city")}
-            className={inputClass(!!errors.city)}
+            placeholder="e.g. Bengaluru Urban"
+            {...register("district")}
+            className={inputClass(!!errors.district)}
           />
-          <FieldError message={errors.city?.message} />
+          <FieldError message={errors.district?.message} />
         </div>
+        <div>
+          <Label htmlFor="full_address" required>Full Address</Label>
+          <textarea
+            id="full_address"
+            placeholder="Door no., street, area…"
+            rows={3}
+            {...register("full_address")}
+            className={`${inputClass(!!errors.full_address)} resize-none`}
+          />
+          <FieldError message={errors.full_address?.message} />
+        </div>
+      </div>
+
+      {/* Row 3: Phone + Email */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="phone" required>Phone Number</Label>
           <input
@@ -184,19 +200,17 @@ export default function VolunteerForm() {
           />
           <FieldError message={errors.phone?.message} />
         </div>
-      </div>
-
-      {/* Email */}
-      <div>
-        <Label htmlFor="email" required>Email Address</Label>
-        <input
-          id="email"
-          type="email"
-          placeholder="you@example.com"
-          {...register("email")}
-          className={inputClass(!!errors.email)}
-        />
-        <FieldError message={errors.email?.message} />
+        <div>
+          <Label htmlFor="email" required>Email Address</Label>
+          <input
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+            {...register("email")}
+            className={inputClass(!!errors.email)}
+          />
+          <FieldError message={errors.email?.message} />
+        </div>
       </div>
 
       {/* Skills */}

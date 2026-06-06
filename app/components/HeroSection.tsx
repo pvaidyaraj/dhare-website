@@ -24,9 +24,9 @@ export default function HeroSection() {
       {/* Content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-20 pb-10">
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-5 py-2.5 mb-5">
+        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-5 py-2.5 mb-5 animate-zoom-pulse">
           <span className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse shrink-0" />
-          <span className="text-green-300 text-sm sm:text-lg font-semibold">5 Crore Sapling Ecological Movement</span>
+          <span className="text-yellow-400 text-sm sm:text-lg font-bold">5 Crore Sapling Ecological Movement</span>
         </div>
 
         {/* Impact counters — right below badge */}
@@ -53,7 +53,7 @@ export default function HeroSection() {
         {/* Saplings planted stat */}
         <div className="inline-flex items-center gap-3 bg-green-600/80 backdrop-blur-sm border border-green-400/50 rounded-2xl px-6 py-3 mb-4">
           <span className="w-2.5 h-2.5 bg-green-300 rounded-full animate-pulse shrink-0" />
-          <span className="text-white font-bold text-base sm:text-2xl lg:text-3xl">🌱 25,000 saplings planted so far</span>
+          <span className="text-white font-bold text-base sm:text-2xl lg:text-3xl">🌱 40,000 saplings planted so far</span>
         </div>
 
         {/* Subheadline */}

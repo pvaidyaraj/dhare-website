@@ -18,3 +18,18 @@ alter table volunteer_registrations enable row level security;
 
 -- Allow inserts from the service role key only (used by the server action)
 -- No SELECT/UPDATE/DELETE policy needed — the service role bypasses RLS
+
+-- -------------------------------------------------------
+-- Sapling registration (Green Bengaluru popup)
+-- -------------------------------------------------------
+
+create table sapling_registrations (
+  id         uuid        default gen_random_uuid() primary key,
+  full_name  text        not null,
+  address    text        not null,
+  pin_code   text        not null,
+  mobile     text        not null,
+  created_at timestamptz default now() not null
+);
+
+alter table sapling_registrations enable row level security;

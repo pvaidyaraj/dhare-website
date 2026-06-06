@@ -1,5 +1,6 @@
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
+import SaplingPopup from "./components/SaplingPopup";
 import AboutSection from "./components/AboutSection";
 import MoUSection from "./components/MoUSection";
 import GreenRingSection from "./components/GreenRingSection";
@@ -16,6 +17,7 @@ import Footer from "./components/Footer";
 export default function Home() {
   return (
     <>
+      <SaplingPopup />
       <Navbar />
       <main>
         <HeroSection />

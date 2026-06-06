@@ -29,16 +29,16 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 shrink-0">
             <Image
-              src="/logos/dhare-logo-new.png"
+              src="/logos/dhare-logo-3.png"
               alt="Dhare Foundation"
-              width={48}
-              height={48}
-              className="rounded-full object-cover"
+              width={56}
+              height={56}
+              className="object-contain shrink-0"
               priority
             />
-            <div className="hidden sm:block">
-              <p className="text-sm font-bold text-green-900 leading-tight">DHARE</p>
-              <p className="text-xs text-green-700 leading-tight">FOUNDATION</p>
+            <div>
+              <p className="text-base sm:text-xl font-bold text-green-900 leading-tight">DHARE</p>
+              <p className="text-[11px] sm:text-sm text-green-700 leading-tight font-medium tracking-wide">FOUNDATION</p>
             </div>
           </Link>
 

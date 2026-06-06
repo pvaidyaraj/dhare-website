@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { getLaunchActive } from "./actions/launch";
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
 import SaplingPopup from "./components/SaplingPopup";
@@ -14,7 +16,9 @@ import DonationSection from "./components/DonationSection";
 import VolunteerCTA from "./components/VolunteerCTA";
 import Footer from "./components/Footer";
 
-export default function Home() {
+export default async function Home() {
+  if (await getLaunchActive()) redirect("/launch");
+
   return (
     <>
       <SaplingPopup />

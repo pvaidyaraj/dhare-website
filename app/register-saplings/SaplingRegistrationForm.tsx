@@ -4,9 +4,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useTranslations } from "next-intl";
 import { submitSaplingRegistration } from "@/app/actions/sapling";
 import { CONSTITUENCIES } from "@/app/data/constituencies";
-import Link from "next/link";
+import { Link } from "@/navigation";
 
 const schema = z.object({
   assembly_constituency: z.string().min(1, "Please select your Assembly Constituency"),
@@ -26,6 +27,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function SaplingRegistrationForm() {
+  const t = useTranslations("saplingForm");
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState("");
 
@@ -52,15 +54,15 @@ export default function SaplingRegistrationForm() {
     return (
       <div className="text-center py-12">
         <div className="text-6xl mb-4">🌱</div>
-        <h2 className="text-2xl font-bold text-green-800 mb-3">Registration Successful!</h2>
+        <h2 className="text-2xl font-bold text-green-800 mb-3">{t("successTitle")}</h2>
         <p className="text-gray-600 leading-relaxed max-w-sm mx-auto">
-          Thank you for registering! We will contact you soon with details about collecting your free saplings.
+          {t("successMsg")}
         </p>
         <Link
           href="/"
           className="inline-block mt-8 px-8 py-3 bg-green-700 text-white font-semibold rounded-full hover:bg-green-600 transition-colors"
         >
-          Back to Home
+          {t("backHome")}
         </Link>
       </div>
     );
@@ -72,7 +74,7 @@ export default function SaplingRegistrationForm() {
       {/* Assembly Constituency */}
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-          Assembly Constituency <span className="text-red-500">*</span>
+          {t("constituency")} <span className="text-red-500">*</span>
         </label>
         <select
           {...register("assembly_constituency")}
@@ -84,7 +86,7 @@ export default function SaplingRegistrationForm() {
             backgroundSize: "18px",
           }}
         >
-          <option value="">— Select your constituency —</option>
+          <option value="">{t("constituencyPlaceholder")}</option>
           {CONSTITUENCIES.map((c) => (
             <option key={c} value={c}>{c}</option>
           ))}
@@ -97,11 +99,11 @@ export default function SaplingRegistrationForm() {
       {/* Full Name */}
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-          Full Name <span className="text-red-500">*</span>
+          {t("fullName")} <span className="text-red-500">*</span>
         </label>
         <input
           {...register("full_name")}
-          placeholder="Your full name"
+          placeholder={t("fullNamePlaceholder")}
           className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
         />
         {errors.full_name && (
@@ -112,11 +114,11 @@ export default function SaplingRegistrationForm() {
       {/* Address */}
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-          Address <span className="text-red-500">*</span>
+          {t("address")} <span className="text-red-500">*</span>
         </label>
         <textarea
           {...register("address")}
-          placeholder="Your full address"
+          placeholder={t("addressPlaceholder")}
           rows={3}
           className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
         />
@@ -128,11 +130,11 @@ export default function SaplingRegistrationForm() {
       {/* Mobile */}
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-          Mobile Number <span className="text-red-500">*</span>
+          {t("mobile")} <span className="text-red-500">*</span>
         </label>
         <input
           {...register("mobile")}
-          placeholder="10-digit mobile number"
+          placeholder={t("mobilePlaceholder")}
           maxLength={10}
           inputMode="numeric"
           className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
@@ -145,12 +147,12 @@ export default function SaplingRegistrationForm() {
       {/* Email */}
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-          Email ID <span className="text-red-500">*</span>
+          {t("email")} <span className="text-red-500">*</span>
         </label>
         <input
           {...register("email")}
           type="email"
-          placeholder="your@email.com"
+          placeholder={t("emailPlaceholder")}
           inputMode="email"
           className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
         />
@@ -162,17 +164,17 @@ export default function SaplingRegistrationForm() {
       {/* Number of Saplings */}
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-          Number of Saplings <span className="text-red-500">*</span>
+          {t("saplings")} <span className="text-red-500">*</span>
         </label>
         <input
           {...register("saplings_count", { valueAsNumber: true })}
           type="number"
           min={51}
-          placeholder="Enter number (minimum 51)"
+          placeholder={t("saplingsPlaceholder")}
           inputMode="numeric"
           className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
         />
-        <p className="text-gray-400 text-xs mt-1">Requests of more than 50 saplings only</p>
+        <p className="text-gray-400 text-xs mt-1">{t("saplingsNote")}</p>
         {errors.saplings_count && (
           <p className="text-red-500 text-xs mt-0.5">{errors.saplings_count.message}</p>
         )}
@@ -188,9 +190,9 @@ export default function SaplingRegistrationForm() {
         />
         <div>
           <label htmlFor="not_a_robot" className="text-sm font-medium text-gray-700 cursor-pointer select-none">
-            I am not a robot
+            {t("notRobot")}
           </label>
-          <p className="text-xs text-gray-500 mt-0.5">Please confirm you are a human before submitting.</p>
+          <p className="text-xs text-gray-500 mt-0.5">{t("notRobotDesc")}</p>
           {errors.not_a_robot && (
             <p className="mt-1 text-sm text-red-600">{errors.not_a_robot.message}</p>
           )}
@@ -208,11 +210,11 @@ export default function SaplingRegistrationForm() {
         disabled={isSubmitting}
         className="w-full py-3.5 bg-green-700 hover:bg-green-600 disabled:bg-green-400 text-white font-bold rounded-xl transition-colors text-base shadow-sm"
       >
-        {isSubmitting ? "Submitting…" : "Submit Registration"}
+        {isSubmitting ? t("submitting") : t("submit")}
       </button>
 
       <p className="text-center text-xs text-gray-400 pt-1">
-        Limited saplings available · For in and around Bengaluru
+        {t("limitNote")}
       </p>
     </form>
   );

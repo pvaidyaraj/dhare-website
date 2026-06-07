@@ -1,26 +1,27 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/navigation";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
+import LocaleSwitcher from "./LocaleSwitcher";
 
-const aboutSubmenu = [
-  { href: "/team", label: "Our Team" },
-];
-
-const navLinks = [
-  { href: "#about", label: "About", submenu: aboutSubmenu },
-  { href: "#green-ring", label: "Green Ring" },
-  { href: "#projects", label: "Our Work" },
-  { href: "#gallery", label: "Gallery" },
-  { href: "#media", label: "Media" },
-  { href: "#donate", label: "Donate" },
-  { href: "#volunteer", label: "Volunteer" },
-];
+const aboutSubmenu = [{ href: "/team", label: "ourTeam" as const }];
 
 export default function Navbar() {
+  const t = useTranslations("nav");
   const [menuOpen, setMenuOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+
+  const navLinks = [
+    { href: "#about", labelKey: "about" as const, submenu: aboutSubmenu },
+    { href: "#green-ring", labelKey: "greenRing" as const },
+    { href: "#projects", labelKey: "ourWork" as const },
+    { href: "#gallery", labelKey: "gallery" as const },
+    { href: "#media", labelKey: "media" as const },
+    { href: "#donate", labelKey: "donate" as const },
+    { href: "#volunteer", labelKey: "volunteer" as const },
+  ];
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-green-100 shadow-sm">
@@ -56,7 +57,7 @@ export default function Navbar() {
                     href={link.href}
                     className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-green-700 transition-colors"
                   >
-                    {link.label}
+                    {t(link.labelKey)}
                     <svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
@@ -70,7 +71,7 @@ export default function Navbar() {
                             href={sub.href}
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
                           >
-                            {sub.label}
+                            {t(sub.label)}
                           </Link>
                         ))}
                       </div>
@@ -83,20 +84,23 @@ export default function Navbar() {
                   href={link.href}
                   className="text-sm font-medium text-gray-700 hover:text-green-700 transition-colors"
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                 </a>
               )
             )}
           </div>
 
-          {/* CTA + Hamburger */}
+          {/* CTA + LocaleSwitcher + Hamburger */}
           <div className="flex items-center gap-3">
             <a
               href="#donate"
               className="hidden sm:inline-flex items-center px-4 py-2 bg-green-700 text-white text-sm font-semibold rounded-full hover:bg-green-800 transition-colors"
             >
-              Donate Now
+              {t("donateNow")}
             </a>
+            <div className="hidden md:block">
+              <LocaleSwitcher />
+            </div>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100"
@@ -116,29 +120,24 @@ export default function Navbar() {
         {/* Mobile Menu */}
         {menuOpen && (
           <div className="md:hidden border-t border-green-100 py-3 space-y-1">
-            {/* About with submenu expanded */}
             <div>
               <a
                 href="#about"
                 onClick={() => setMenuOpen(false)}
                 className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition-colors"
               >
-                About
+                {t("about")}
               </a>
               <div className="ml-5 mt-1 space-y-1 border-l-2 border-green-100 pl-3">
-                {aboutSubmenu.map((sub) => (
-                  <Link
-                    key={sub.href}
-                    href={sub.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="block py-1.5 text-sm text-gray-600 hover:text-green-700 transition-colors"
-                  >
-                    {sub.label}
-                  </Link>
-                ))}
+                <Link
+                  href="/team"
+                  onClick={() => setMenuOpen(false)}
+                  className="block py-1.5 text-sm text-gray-600 hover:text-green-700 transition-colors"
+                >
+                  {t("ourTeam")}
+                </Link>
               </div>
             </div>
-
             {navLinks.filter((l) => !l.submenu).map((link) => (
               <a
                 key={link.href}
@@ -146,17 +145,20 @@ export default function Navbar() {
                 onClick={() => setMenuOpen(false)}
                 className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition-colors"
               >
-                {link.label}
+                {t(link.labelKey)}
               </a>
             ))}
-            <div className="pt-2 px-3">
+            <div className="pt-2 px-3 flex flex-col gap-2">
               <a
                 href="#donate"
                 onClick={() => setMenuOpen(false)}
                 className="block w-full text-center px-4 py-2 bg-green-700 text-white text-sm font-semibold rounded-full hover:bg-green-800 transition-colors"
               >
-                Donate Now
+                {t("donateNow")}
               </a>
+              <div className="flex justify-end">
+                <LocaleSwitcher />
+              </div>
             </div>
           </div>
         )}

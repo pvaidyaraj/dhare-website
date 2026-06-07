@@ -1,15 +1,17 @@
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 
-const counters = [
-  { label: "Total Saplings Target", value: "5,00,00,000", sub: "Across all of Karnataka", icon: "🌳" },
-  { label: "Green Ring Bengaluru", value: "2,00,00,000", sub: "In & around Bengaluru", icon: "🌿" },
-  { label: "Rest of Karnataka", value: "3,00,00,000", sub: "Across Karnataka's districts", icon: "🌱" },
-];
+export default async function HeroSection() {
+  const t = await getTranslations("hero");
 
-export default function HeroSection() {
+  const counters = [
+    { label: t("counter0Label"), value: "5,00,00,000", sub: t("counter0Sub"), icon: "🌳" },
+    { label: t("counter1Label"), value: "2,00,00,000", sub: t("counter1Sub"), icon: "🌿" },
+    { label: t("counter2Label"), value: "3,00,00,000", sub: t("counter2Sub"), icon: "🌱" },
+  ];
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background */}
       <div className="absolute inset-0">
         <Image
           src="/images/aerial-forest.jpeg"
@@ -21,17 +23,14 @@ export default function HeroSection() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/45 to-black/75" />
       </div>
 
-      {/* Content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-20 pb-10">
-        {/* Badge */}
         <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-5 py-2.5 mb-5 animate-zoom-pulse">
           <span className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse shrink-0" />
-          <span className="text-yellow-400 text-sm sm:text-lg font-bold">5 Crore Sapling Ecological Movement</span>
+          <span className="text-yellow-400 text-sm sm:text-lg font-bold">{t("badge")}</span>
         </div>
 
-        {/* Impact counters — right below badge */}
         <div className="mb-6 w-full">
-          <p className="text-green-400 text-xs font-semibold uppercase tracking-widest mb-3">Our Impact Goal</p>
+          <p className="text-green-400 text-xs font-semibold uppercase tracking-widest mb-3">{t("impactGoal")}</p>
           <div className="grid grid-cols-3 gap-3 sm:gap-5">
             {counters.map((c) => (
               <div key={c.label} className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl py-4 px-3 sm:py-5 sm:px-4">
@@ -44,46 +43,30 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Headline */}
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">
-          Creating Green, Living,
-          <span className="block text-green-400 mt-1">Biodiverse Karnataka</span>
+          {t("headline1")}
+          <span className="block text-green-400 mt-1">{t("headline2")}</span>
         </h1>
 
-        {/* Saplings planted stat */}
         <div className="inline-flex items-center gap-3 bg-green-600/80 backdrop-blur-sm border border-green-400/50 rounded-2xl px-6 py-3 mb-4">
           <span className="w-2.5 h-2.5 bg-green-300 rounded-full animate-pulse shrink-0" />
-          <span className="text-white font-bold text-base sm:text-2xl lg:text-3xl">🌱 40,000 saplings planted so far</span>
+          <span className="text-white font-bold text-base sm:text-2xl lg:text-3xl">{t("saplingsStat")}</span>
         </div>
 
-        {/* Subheadline */}
         <p className="text-base sm:text-lg text-gray-200 max-w-2xl mx-auto leading-relaxed mb-2">
-          Restoring Karnataka's ecological balance through native sapling plantation, Miyawaki forests,
-          biodiversity conservation, groundwater recharge, and community participation.
+          {t("subheadline")}
         </p>
-        <p className="text-sm text-gray-300 max-w-xl mx-auto mb-8 italic">
-          Plant. Protect. Recharge. Restore.
-        </p>
+        <p className="text-sm text-gray-300 max-w-xl mx-auto mb-8 italic">{t("tagline")}</p>
 
-        {/* CTAs */}
         <div className="flex flex-wrap justify-center gap-3">
-          <a
-            href="#volunteer"
-            className="px-6 py-2.5 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-full transition-colors text-sm"
-          >
-            Volunteer With Us
+          <a href="#volunteer" className="px-6 py-2.5 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-full transition-colors text-sm">
+            {t("volunteerCta")}
           </a>
-          <a
-            href="#donate"
-            className="px-6 py-2.5 bg-white hover:bg-gray-100 text-green-800 font-semibold rounded-full transition-colors text-sm"
-          >
-            Donate Now
+          <a href="#donate" className="px-6 py-2.5 bg-white hover:bg-gray-100 text-green-800 font-semibold rounded-full transition-colors text-sm">
+            {t("donateCta")}
           </a>
-          <a
-            href="#work"
-            className="px-6 py-2.5 border-2 border-white/60 hover:border-white text-white font-semibold rounded-full transition-colors text-sm"
-          >
-            CSR Partnership
+          <a href="#work" className="px-6 py-2.5 border-2 border-white/60 hover:border-white text-white font-semibold rounded-full transition-colors text-sm">
+            {t("csrCta")}
           </a>
         </div>
       </div>

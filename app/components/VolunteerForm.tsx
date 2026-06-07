@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useTranslations } from "next-intl";
 import { submitVolunteerForm } from "@/app/actions/volunteer";
 
 const schema = z.object({
@@ -31,7 +32,8 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const SKILL_OPTIONS = [
+// English values are submitted to DB; translated labels displayed in UI
+const SKILL_VALUES = [
   "Plantation & Nursery Work",
   "Photography & Documentation",
   "Teaching & Awareness Programs",
@@ -43,7 +45,7 @@ const SKILL_OPTIONS = [
   "Community Outreach",
 ];
 
-const AVAILABILITY_OPTIONS = [
+const AVAILABILITY_VALUES = [
   "Weekday Mornings",
   "Weekday Evenings",
   "Saturday",
@@ -75,6 +77,7 @@ function inputClass(hasError: boolean) {
 }
 
 export default function VolunteerForm() {
+  const t = useTranslations("volunteerForm");
   const [serverError, setServerError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
@@ -120,12 +123,9 @@ export default function VolunteerForm() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-3">Registration Received!</h2>
-        <p className="text-gray-600 max-w-md mx-auto leading-relaxed">
-          Thank you for joining Dhare Foundation's green movement. We'll reach out to you soon with details
-          about upcoming plantation drives and volunteer activities.
-        </p>
-        <p className="mt-5 text-green-700 font-semibold italic">Plant. Protect. Recharge. Restore.</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-3">{t("successTitle")}</h2>
+        <p className="text-gray-600 max-w-md mx-auto leading-relaxed">{t("successMsg")}</p>
+        <p className="mt-5 text-green-700 font-semibold italic">{t("successTagline")}</p>
       </div>
     );
   }
@@ -135,22 +135,22 @@ export default function VolunteerForm() {
       {/* Row 1: Full Name + Age */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="sm:col-span-2">
-          <Label htmlFor="full_name" required>Full Name</Label>
+          <Label htmlFor="full_name" required>{t("fullName")}</Label>
           <input
             id="full_name"
             type="text"
-            placeholder="e.g. Ravi Kumar"
+            placeholder={t("fullNamePlaceholder")}
             {...register("full_name")}
             className={inputClass(!!errors.full_name)}
           />
           <FieldError message={errors.full_name?.message} />
         </div>
         <div>
-          <Label htmlFor="age" required>Age</Label>
+          <Label htmlFor="age" required>{t("age")}</Label>
           <input
             id="age"
             type="number"
-            placeholder="e.g. 28"
+            placeholder={t("agePlaceholder")}
             min={16}
             max={100}
             {...register("age", { valueAsNumber: true })}
@@ -163,21 +163,21 @@ export default function VolunteerForm() {
       {/* Row 2: District + Full Address */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="district" required>District</Label>
+          <Label htmlFor="district" required>{t("district")}</Label>
           <input
             id="district"
             type="text"
-            placeholder="e.g. Bengaluru Urban"
+            placeholder={t("districtPlaceholder")}
             {...register("district")}
             className={inputClass(!!errors.district)}
           />
           <FieldError message={errors.district?.message} />
         </div>
         <div>
-          <Label htmlFor="full_address" required>Full Address</Label>
+          <Label htmlFor="full_address" required>{t("address")}</Label>
           <textarea
             id="full_address"
-            placeholder="Door no., street, area…"
+            placeholder={t("addressPlaceholder")}
             rows={3}
             {...register("full_address")}
             className={`${inputClass(!!errors.full_address)} resize-none`}
@@ -189,11 +189,11 @@ export default function VolunteerForm() {
       {/* Row 3: Phone + Email */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="phone" required>Phone Number</Label>
+          <Label htmlFor="phone" required>{t("phone")}</Label>
           <input
             id="phone"
             type="tel"
-            placeholder="10-digit mobile number"
+            placeholder={t("phonePlaceholder")}
             maxLength={10}
             {...register("phone")}
             className={inputClass(!!errors.phone)}
@@ -201,11 +201,11 @@ export default function VolunteerForm() {
           <FieldError message={errors.phone?.message} />
         </div>
         <div>
-          <Label htmlFor="email" required>Email Address</Label>
+          <Label htmlFor="email" required>{t("emailAddress")}</Label>
           <input
             id="email"
             type="email"
-            placeholder="you@example.com"
+            placeholder={t("emailPlaceholder")}
             {...register("email")}
             className={inputClass(!!errors.email)}
           />
@@ -215,15 +215,15 @@ export default function VolunteerForm() {
 
       {/* Skills */}
       <div>
-        <Label htmlFor="skills" required>Skills & Areas of Interest</Label>
+        <Label htmlFor="skills" required>{t("skills")}</Label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-1">
-          {SKILL_OPTIONS.map((skill) => {
-            const checked = selectedSkills.includes(skill);
+          {SKILL_VALUES.map((skillValue, i) => {
+            const checked = selectedSkills.includes(skillValue);
             return (
               <button
-                key={skill}
+                key={skillValue}
                 type="button"
-                onClick={() => toggleCheckbox("skills", skill)}
+                onClick={() => toggleCheckbox("skills", skillValue)}
                 className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border text-sm font-medium text-left transition-all ${
                   checked
                     ? "bg-green-600 border-green-600 text-white"
@@ -241,7 +241,7 @@ export default function VolunteerForm() {
                     </svg>
                   )}
                 </span>
-                {skill}
+                {t(`skill${i}` as any)}
               </button>
             );
           })}
@@ -251,11 +251,11 @@ export default function VolunteerForm() {
         {/* Any other interests */}
         <div className="mt-3">
           <label htmlFor="other_interests" className="block text-sm text-gray-600 mb-1.5">
-            Any other interests or skills?
+            {t("otherInterests")}
           </label>
           <textarea
             id="other_interests"
-            placeholder="e.g. Landscape architecture, legal aid, organic farming…"
+            placeholder={t("otherInterestsPlaceholder")}
             rows={2}
             {...register("other_interests")}
             className={`${inputClass(!!errors.other_interests)} resize-none`}
@@ -271,22 +271,22 @@ export default function VolunteerForm() {
 
       {/* Availability */}
       <div>
-        <Label htmlFor="availability" required>Availability</Label>
+        <Label htmlFor="availability" required>{t("availability")}</Label>
         <div className="flex flex-wrap gap-2 mt-1">
-          {AVAILABILITY_OPTIONS.map((slot) => {
-            const checked = selectedAvailability.includes(slot);
+          {AVAILABILITY_VALUES.map((slotValue, i) => {
+            const checked = selectedAvailability.includes(slotValue);
             return (
               <button
-                key={slot}
+                key={slotValue}
                 type="button"
-                onClick={() => toggleCheckbox("availability", slot)}
+                onClick={() => toggleCheckbox("availability", slotValue)}
                 className={`px-4 py-2 rounded-full border text-sm font-medium transition-all ${
                   checked
                     ? "bg-green-600 border-green-600 text-white"
                     : "bg-white border-gray-200 text-gray-700 hover:border-green-400"
                 }`}
               >
-                {slot}
+                {t(`avail${i}` as any)}
               </button>
             );
           })}
@@ -296,10 +296,10 @@ export default function VolunteerForm() {
 
       {/* Motivation */}
       <div>
-        <Label htmlFor="motivation" required>Why do you want to volunteer?</Label>
+        <Label htmlFor="motivation" required>{t("motivation")}</Label>
         <textarea
           id="motivation"
-          placeholder="Tell us what motivates you to join Dhare Foundation's mission…"
+          placeholder={t("motivationPlaceholder")}
           rows={5}
           {...register("motivation")}
           className={`${inputClass(!!errors.motivation)} resize-none`}
@@ -322,9 +322,9 @@ export default function VolunteerForm() {
         />
         <div>
           <label htmlFor="not_a_robot" className="text-sm font-medium text-gray-700 cursor-pointer select-none">
-            I am not a robot
+            {t("notRobot")}
           </label>
-          <p className="text-xs text-gray-500 mt-0.5">Please confirm you are a human before submitting.</p>
+          <p className="text-xs text-gray-500 mt-0.5">{t("notRobotDesc")}</p>
           <FieldError message={errors.not_a_robot?.message} />
         </div>
       </div>
@@ -348,15 +348,15 @@ export default function VolunteerForm() {
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
             </svg>
-            Submitting…
+            {t("submitting")}
           </>
         ) : (
-          "Register as Volunteer"
+          t("submit")
         )}
       </button>
 
       <p className="text-center text-xs text-gray-400">
-        Your information is used only for volunteer coordination by Dhare Foundation.
+        {t("privacyNote")}
       </p>
     </form>
   );

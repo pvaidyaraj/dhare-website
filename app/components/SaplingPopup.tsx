@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/navigation";
 
 export default function SaplingPopup() {
+  const t = useTranslations("sapling");
   const [isVisible, setIsVisible] = useState(true);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -31,8 +33,8 @@ export default function SaplingPopup() {
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 bg-green-300 rounded-full animate-pulse shrink-0" />
             <div>
-              <p className="text-white font-bold text-xs leading-tight">Green Bengaluru</p>
-              <p className="text-green-300 text-[10px] leading-tight">Dhare Foundation</p>
+              <p className="text-white font-bold text-xs leading-tight">{t("title")}</p>
+              <p className="text-green-300 text-[10px] leading-tight">{t("subtitle")}</p>
             </div>
           </div>
           <button
@@ -48,16 +50,16 @@ export default function SaplingPopup() {
 
         {/* Body */}
         <div className="px-3 py-3 text-center">
-          <p className="text-gray-800 font-bold text-xs">For Free Saplings</p>
-          <p className="text-green-700 font-semibold text-xs">For in and around Bengaluru</p>
+          <p className="text-gray-800 font-bold text-xs">{t("forFree")}</p>
+          <p className="text-green-700 font-semibold text-xs">{t("forBengaluru")}</p>
           <div className="mt-1.5 inline-flex items-center gap-1 bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5">
-            <span className="text-amber-600 font-semibold text-[10px]">⏰ Last date: June 20th</span>
+            <span className="text-amber-600 font-semibold text-[10px]">{t("deadline")}</span>
           </div>
           <Link
             href="/register-saplings"
             className="mt-3 w-full py-2 bg-green-700 hover:bg-green-600 text-white font-bold rounded-lg transition-colors text-xs shadow-sm flex items-center justify-center"
           >
-            Register
+            {t("register")}
           </Link>
         </div>
       </div>

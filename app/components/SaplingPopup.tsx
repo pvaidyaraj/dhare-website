@@ -59,9 +59,6 @@ export default function SaplingPopup() {
           >
             Register
           </Link>
-          <p className="text-[10px] text-gray-400 mt-1.5">
-            For in and around Bengaluru
-          </p>
         </div>
       </div>
     </div>

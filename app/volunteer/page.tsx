@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
 import VolunteerForm from "@/app/components/VolunteerForm";
 
 export const metadata: Metadata = {
@@ -18,7 +20,9 @@ const highlights = [
   { icon: "📢", text: "School & college programs" },
 ];
 
-export default function VolunteerPage() {
+export default async function VolunteerPage() {
+  const messages = await getMessages();
+
   return (
     <>
       {/* Top nav strip */}
@@ -100,7 +104,9 @@ export default function VolunteerPage() {
                     Fields marked with <span className="text-red-500">*</span> are required.
                   </p>
                 </div>
-                <VolunteerForm />
+                <NextIntlClientProvider messages={messages}>
+                  <VolunteerForm />
+                </NextIntlClientProvider>
               </div>
             </div>
 

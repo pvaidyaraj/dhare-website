@@ -1,10 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
 import SaplingRegistrationForm from "./SaplingRegistrationForm";
 
 export const metadata = { title: "Free Sapling Registration — Dhare Foundation" };
 
-export default function SaplingRegistrationPage() {
+export default async function SaplingRegistrationPage() {
+  const messages = await getMessages();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
 
@@ -39,7 +43,9 @@ export default function SaplingRegistrationPage() {
       {/* Form card */}
       <div className="max-w-lg mx-auto px-4 py-8">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
-          <SaplingRegistrationForm />
+          <NextIntlClientProvider messages={messages}>
+            <SaplingRegistrationForm />
+          </NextIntlClientProvider>
         </div>
 
         <Link

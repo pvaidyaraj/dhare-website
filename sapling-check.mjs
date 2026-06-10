@@ -1,0 +1,11 @@
+import { chromium, devices } from "playwright";
+import path from "path";
+import { fileURLToPath } from "url";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const browser = await chromium.launch();
+const ctx = await browser.newContext({ ...devices["Pixel 5"] });
+const page = await ctx.newPage();
+await page.goto("http://localhost:3000/register-saplings", { waitUntil: "networkidle" });
+await page.waitForTimeout(500);
+await page.screenshot({ path: path.join(__dirname, "sapling-form.png"), fullPage: true });
+await ctx.close(); await browser.close(); console.log("Done.");

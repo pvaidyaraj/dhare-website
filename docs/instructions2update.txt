@@ -1,44 +1,102 @@
-STEPS TO UPDATE THE WEBSITE FROM ANOTHER LAPTOP
-=================================================
+========================================================
+  DHARE WEBSITE - SETUP & UPDATE FROM ANOTHER SYSTEM
+========================================================
 
-1. INSTALL PREREQUISITES
-   - Node.js (v18+): https://nodejs.org
-   - Git: https://git-scm.com
-   - Claude Code (optional, for AI assistance): npm install -g @anthropic-ai/claude-code
+Follow these steps to get the Dhare website running
+on a new laptop and to push updates to GitHub/Vercel.
 
-2. CLONE THE REPOSITORY
-   git clone https://github.com/pvaidyaraj/dhare-website.git
-   cd dhare-website
+--------------------------------------------------------
+STEP 1: Install Prerequisites
+--------------------------------------------------------
+  - Node.js (v18+): https://nodejs.org
+  - Git:            https://git-scm.com
+  - Claude Code (optional, for AI assistance):
+      npm install -g @anthropic-ai/claude-code
 
-3. INSTALL DEPENDENCIES
-   npm install
+Verify installations:
+  node -v
+  npm -v
+  git --version
 
-4. SET UP ENVIRONMENT VARIABLES
-   Create a .env.local file in the project root with the Supabase credentials.
-   Copy the values from the existing .env.local on the original laptop:
-     D:\Dhare_Website\dhare_website_content\dhare-website\.env.local
+--------------------------------------------------------
+STEP 2: Clone the Repository
+--------------------------------------------------------
+  git clone https://github.com/pvaidyaraj/dhare-website.git
+  cd dhare-website
 
-   OR, if you have the Vercel CLI, pull them automatically:
-     npm install -g vercel
-     vercel link       (links to your Vercel project)
-     vercel env pull   (downloads .env.local from Vercel)
+--------------------------------------------------------
+STEP 3: Install Dependencies
+--------------------------------------------------------
+  npm install
 
-5. RUN LOCALLY TO TEST
-   npm run dev
-   Open http://localhost:3000 in your browser.
+--------------------------------------------------------
+STEP 4: Set Up Environment Variables
+--------------------------------------------------------
+Create a file named ".env.local" in the project root
+(dhare-website/) with the following keys:
 
-6. MAKE YOUR CHANGES, THEN PUSH
-   git add .
-   git commit -m "describe your changes"
-   git push
+  NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
+  SUPABASE_SERVICE_ROLE_KEY=<your-service-role-key>
 
-   Pushing to the master branch on GitHub will automatically trigger
-   a Vercel deployment -- no manual deploy needed.
+Option A - Copy from original machine:
+  D:\Dhare_Website\dhare_website_content\dhare-website\.env.local
 
-NOTE: The .env.local file is intentionally excluded from Git for security.
-      Step 4 is the only setup that requires credentials from the original machine.
+Option B - Pull from Vercel automatically:
+  npm install -g vercel
+  vercel link        (links to your Vercel project)
+  vercel env pull    (downloads .env.local from Vercel)
 
-REPO STRUCTURE NOTES:
-  docs/            - Planning and content files (txt notes, Website_content.docx)
-  legal_documents/ - Charity documents (80G certificate, PAN, CSR registration,
-                     Darpan ID, CSR documents PDF, donation bank details)
+Option C - Get values from Supabase dashboard:
+  https://supabase.com > Project Settings > API
+
+NOTE: This file is gitignored and will never be on GitHub.
+      You must create it manually on every new system.
+
+--------------------------------------------------------
+STEP 5: Run Locally to Test
+--------------------------------------------------------
+  npm run dev
+
+Open http://localhost:3000 in your browser.
+
+--------------------------------------------------------
+STEP 6: Make Changes & Push to GitHub
+--------------------------------------------------------
+  git pull origin master             # get latest changes first
+  git add <file1> <file2> ...        # stage specific files
+  git add .                          # or stage all changes
+  git status                         # review what will be committed
+  git commit -m "describe your changes"
+  git push origin master
+
+Pushing to the master branch automatically triggers
+a Vercel deployment -- no manual deploy needed.
+
+--------------------------------------------------------
+USEFUL COMMANDS
+--------------------------------------------------------
+  npm run dev           - Start development server
+  npm run build         - Build for production
+  npm run start         - Start production server
+  npm run lint          - Run linter
+
+  git status            - Check uncommitted changes
+  git log --oneline -5  - View last 5 commits
+  git remote -v         - View connected GitHub remote
+
+--------------------------------------------------------
+REPO STRUCTURE NOTES
+--------------------------------------------------------
+  app/             - Next.js pages and components
+  messages/        - i18n translation files (EN, KN)
+  docs/            - Planning and content files
+  legal_documents/ - Charity documents (80G certificate,
+                     PAN, CSR registration, Darpan ID,
+                     donation bank details)
+  Images/          - Website image assets
+  Logos/           - Dhare logo files
+
+--------------------------------------------------------
+REPO:   https://github.com/pvaidyaraj/dhare-website.git
+BRANCH: master
+========================================================

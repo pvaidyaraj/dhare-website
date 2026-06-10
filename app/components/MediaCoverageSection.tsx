@@ -5,16 +5,16 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 
 const mediaSrcs = [
-  { src: "/images/media/NSFelicitation.jpg", captionKey: "caption0" },
-  { src: "/images/media/media1.jpg", captionKey: null },
-  { src: "/images/media/media2.jpg", captionKey: null },
-  { src: "/images/media/media3.jpg", captionKey: null },
-  { src: "/images/media/media4.jpg", captionKey: null },
-  { src: "/images/media/media5.jpg", captionKey: null },
-  { src: "/images/media/media6.jpg", captionKey: null },
-  { src: "/images/media/media7.jpg", captionKey: null },
-  { src: "/images/media/media8.jpg", captionKey: null },
-  { src: "/images/media/media9.jpg", captionKey: null },
+  { src: "/images/media-coverage/NSFelicitation.jpg", captionKey: "caption0" },
+  { src: "/images/media-coverage/media1.jpg", captionKey: null },
+  { src: "/images/media-coverage/media2.jpg", captionKey: null },
+  { src: "/images/media-coverage/media3.jpg", captionKey: null },
+  { src: "/images/media-coverage/media4.jpg", captionKey: null },
+  { src: "/images/media-coverage/media5.jpg", captionKey: null },
+  { src: "/images/media-coverage/media6.jpg", captionKey: null },
+  { src: "/images/media-coverage/media7.jpg", captionKey: null },
+  { src: "/images/media-coverage/media8.jpg", captionKey: null },
+  { src: "/images/media-coverage/media9.jpg", captionKey: null },
 ];
 
 export default function MediaCoverageSection() {

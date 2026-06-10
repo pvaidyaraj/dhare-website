@@ -17,7 +17,7 @@ export default async function MoUSection() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           <div className="relative rounded-2xl overflow-hidden shadow-lg h-72 sm:h-96">
-            <Image src="/images/plantation-row.jpeg" alt="Green Ring Bengaluru plantation" fill className="object-cover" />
+            <Image src="/images/gallery/plantation-row.jpeg" alt="Green Ring Bengaluru plantation" fill className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-6">
               <p className="text-green-400 text-sm font-semibold mb-1">{t("greenRingLabel")}</p>

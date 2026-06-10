@@ -37,7 +37,7 @@ export default async function VolunteerPage() {
           <span className="text-white/30 text-sm">·</span>
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/logos/dhare-logo-new.png"
+              src="/images/logos/dhare-logo-new.png"
               alt="Dhare Foundation"
               width={28}
               height={28}
@@ -68,7 +68,7 @@ export default async function VolunteerPage() {
               {/* Image */}
               <div className="relative h-52 sm:h-64 rounded-2xl overflow-hidden shadow mb-6">
                 <Image
-                  src="/images/dhare-volunteer.jpg"
+                  src="/images/gallery/dhare-volunteer.jpg"
                   alt="Dhare Foundation volunteer"
                   fill
                   className="object-cover"

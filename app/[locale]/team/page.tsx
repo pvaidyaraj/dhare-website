@@ -52,7 +52,7 @@ export default function TeamPage() {
           </Link>
           <span className="text-white/30">·</span>
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/logos/dhare-logo-new.png" alt="Dhare Foundation" width={28} height={28} className="rounded-full" />
+            <Image src="/images/logos/dhare-logo-new.png" alt="Dhare Foundation" width={28} height={28} className="rounded-full" />
             <span className="text-white text-sm font-semibold">Dhare Foundation</span>
           </Link>
         </div>

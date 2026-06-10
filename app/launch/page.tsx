@@ -47,7 +47,7 @@ export default async function LaunchPage({ searchParams }: Props) {
             }}
           >
             <Image
-              src="/logos/dhare-logo-3.png"
+              src="/images/logos/dhare-logo-3.png"
               alt="Dhare Foundation"
               fill
               className="object-contain p-1.5"

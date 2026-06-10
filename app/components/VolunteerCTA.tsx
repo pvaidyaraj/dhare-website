@@ -12,7 +12,7 @@ export default async function VolunteerCTA() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative bg-green-800 rounded-3xl overflow-hidden">
           <div className="absolute inset-0 opacity-20">
-            <Image src="/images/dense-forest.jpeg" alt="Volunteer background" fill className="object-cover" />
+            <Image src="/images/gallery/dense-forest.jpeg" alt="Volunteer background" fill className="object-cover" />
           </div>
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 sm:p-8 lg:p-10 items-center">

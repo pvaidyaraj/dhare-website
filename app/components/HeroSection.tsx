@@ -14,7 +14,7 @@ export default async function HeroSection() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0">
         <Image
-          src="/images/aerial-forest.jpeg"
+          src="/images/gallery/aerial-forest.jpeg"
           alt="Dhare Foundation forest"
           fill
           className="object-cover"

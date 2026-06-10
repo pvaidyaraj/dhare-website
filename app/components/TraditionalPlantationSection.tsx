@@ -25,7 +25,7 @@ export default async function TraditionalPlantationSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start mb-8">
           <div className="relative h-72 sm:h-96 rounded-2xl overflow-hidden shadow-xl">
             <Image
-              src="/images/plantation-row.jpeg"
+              src="/images/gallery/plantation-row.jpeg"
               alt="Row of native saplings at a Dhare Foundation traditional plantation site"
               fill
               className="object-cover"

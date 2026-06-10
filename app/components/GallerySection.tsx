@@ -5,14 +5,14 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 
 const photoSrcs = [
-  { src: "/images/dhare-team-kslsa.jpg", contain: false },
-  { src: "/images/media/NSFelicitation.jpg", contain: true },
-  { src: "/images/aerial-canopy.jpeg", contain: false },
-  { src: "/images/aerial-forest.jpeg", contain: false },
-  { src: "/images/soil-preparation.jpeg", contain: false },
-  { src: "/images/plantation-row.jpeg", contain: false },
-  { src: "/images/dense-forest.jpeg", contain: false },
-  { src: "/images/community-volunteer.jpeg", contain: false },
+  { src: "/images/gallery/dhare-team-kslsa.jpg", contain: false },
+  { src: "/images/media-coverage/NSFelicitation.jpg", contain: true },
+  { src: "/images/gallery/aerial-canopy.jpeg", contain: false },
+  { src: "/images/gallery/aerial-forest.jpeg", contain: false },
+  { src: "/images/gallery/soil-preparation.jpeg", contain: false },
+  { src: "/images/gallery/plantation-row.jpeg", contain: false },
+  { src: "/images/gallery/dense-forest.jpeg", contain: false },
+  { src: "/images/gallery/community-volunteer.jpeg", contain: false },
 ];
 
 export default function GallerySection() {

@@ -16,7 +16,7 @@ export default async function SaplingRegistrationPage() {
       <div className="bg-white border-b border-green-100 shadow-sm px-4 sm:px-8 py-3">
         <Link href="/" className="inline-flex items-center gap-3">
           <Image
-            src="/logos/dhare-logo-3.png"
+            src="/images/logos/dhare-logo-3.png"
             alt="Dhare Foundation"
             width={48}
             height={48}

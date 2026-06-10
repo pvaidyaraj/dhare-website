@@ -21,7 +21,7 @@ export default async function WorkSection() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-7">
           <div className="relative h-72 sm:h-96 rounded-2xl overflow-hidden shadow-xl order-2 lg:order-1">
-            <Image src="/images/miyawaki-sign.jpeg" alt="Miyawaki Forest at Canaan — 530 trees by Dhare Foundation" fill className="object-cover" />
+            <Image src="/images/gallery/miyawaki-sign.jpeg" alt="Miyawaki Forest at Canaan — 530 trees by Dhare Foundation" fill className="object-cover" />
           </div>
           <div className="order-1 lg:order-2">
             <div className="inline-flex items-center gap-2 bg-green-100 rounded-full px-4 py-1.5 mb-5">

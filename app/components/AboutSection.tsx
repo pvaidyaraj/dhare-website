@@ -47,7 +47,7 @@ export default async function AboutSection() {
           <div className="relative min-h-[320px] sm:min-h-[400px]">
             <div className="relative h-full rounded-2xl overflow-hidden shadow-xl">
               <Image
-                src="/images/community-volunteer.jpeg"
+                src="/images/gallery/community-volunteer.jpeg"
                 alt="Community member with native sapling"
                 fill
                 className="object-cover"

@@ -67,7 +67,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-3">
-              <Image src="/logos/dhare-logo-new.png" alt="Dhare Foundation" width={48} height={48} className="rounded-full" />
+              <Image src="/images/logos/dhare-logo-new.png" alt="Dhare Foundation" width={48} height={48} className="rounded-full" />
               <div>
                 <p className="text-white font-bold">DHARE FOUNDATION</p>
                 <p className="text-green-400 text-xs">{t("tagline")}</p>

@@ -19,9 +19,9 @@ const notoSansKannada = Noto_Sans_Kannada({
 
 export const metadata: Metadata = {
   icons: {
-    icon: "/logos/dhare-logo-new.png",
-    shortcut: "/logos/dhare-logo-new.png",
-    apple: "/logos/dhare-logo-new.png",
+    icon: "/images/logos/dhare-logo-new.png",
+    shortcut: "/images/logos/dhare-logo-new.png",
+    apple: "/images/logos/dhare-logo-new.png",
   },
   title: "Dhare Foundation — Creating Green, Living, Biodiverse Karnataka",
   description:

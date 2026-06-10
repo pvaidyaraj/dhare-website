@@ -33,16 +33,16 @@ export default async function GreenRingSection() {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="relative h-48 sm:h-64 rounded-2xl overflow-hidden shadow-lg col-span-2">
-              <Image src="/images/aerial-canopy.jpeg" alt="Aerial view of Miyawaki canopy" fill className="object-cover" />
+              <Image src="/images/gallery/aerial-canopy.jpeg" alt="Aerial view of Miyawaki canopy" fill className="object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-4">
                 <p className="text-white text-xs font-medium">{t("mapCaption")}</p>
               </div>
             </div>
             <div className="relative h-40 rounded-2xl overflow-hidden shadow">
-              <Image src="/images/soil-preparation.jpeg" alt="Soil preparation for plantation" fill className="object-cover" />
+              <Image src="/images/gallery/soil-preparation.jpeg" alt="Soil preparation for plantation" fill className="object-cover" />
             </div>
             <div className="relative h-40 rounded-2xl overflow-hidden shadow">
-              <Image src="/images/miyawaki-sign.jpeg" alt="Miyawaki Forest signboard" fill className="object-cover" />
+              <Image src="/images/gallery/miyawaki-sign.jpeg" alt="Miyawaki Forest signboard" fill className="object-cover" />
             </div>
           </div>
         </div>

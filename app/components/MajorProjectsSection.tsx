@@ -30,13 +30,13 @@ export default async function MajorProjectsSection() {
         <div className="bg-green-900 rounded-2xl overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2">
             <div className="relative h-64 lg:h-80">
-              <Image src="/images/before-dhare.jpg" alt="Bare land before plantation" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+              <Image src="/images/gallery/before-dhare.jpg" alt="Bare land before plantation" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
               <div className="absolute inset-0 bg-black/40 flex items-end p-5">
                 <p className="text-white font-semibold text-sm">{t("beforeLabel")}</p>
               </div>
             </div>
             <div className="relative h-64 lg:h-80">
-              <Image src="/images/green-cover.jpg" alt="Dense green cover after plantation" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+              <Image src="/images/gallery/green-cover.jpg" alt="Dense green cover after plantation" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
               <div className="absolute inset-0 bg-black/30 flex items-end p-5">
                 <p className="text-white font-semibold text-sm">{t("afterLabel")}</p>
               </div>

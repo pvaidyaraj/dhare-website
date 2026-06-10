@@ -27,7 +27,7 @@ export default async function VolunteerPage() {
           </Link>
           <span className="text-white/30 text-sm">·</span>
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/logos/dhare-logo-new.png" alt="Dhare Foundation" width={28} height={28} className="rounded-full" />
+            <Image src="/images/logos/dhare-logo-new.png" alt="Dhare Foundation" width={28} height={28} className="rounded-full" />
             <span className="text-white text-sm font-semibold">Dhare Foundation</span>
           </Link>
         </div>
@@ -42,7 +42,7 @@ export default async function VolunteerPage() {
               <p className="text-gray-600 leading-relaxed mb-6">{t("desc")}</p>
 
               <div className="relative h-52 sm:h-64 rounded-2xl overflow-hidden shadow mb-6">
-                <Image src="/images/dhare-volunteer.jpg" alt="Dhare Foundation volunteer" fill className="object-cover" />
+                <Image src="/images/gallery/dhare-volunteer.jpg" alt="Dhare Foundation volunteer" fill className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-4">
                   <p className="text-white text-xs font-medium">{t("imageCaption")}</p>
                 </div>

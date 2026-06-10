@@ -12,7 +12,7 @@ export default async function SaplingRegistrationPage() {
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
       <div className="bg-white border-b border-green-100 shadow-sm px-4 sm:px-8 py-3">
         <Link href="/" className="inline-flex items-center gap-3">
-          <Image src="/logos/dhare-logo-3.png" alt="Dhare Foundation" width={48} height={48} className="object-contain shrink-0" priority />
+          <Image src="/images/logos/dhare-logo-3.png" alt="Dhare Foundation" width={48} height={48} className="object-contain shrink-0" priority />
           <div>
             <p className="text-base sm:text-xl font-bold text-green-900 leading-tight">DHARE</p>
             <p className="text-[11px] sm:text-sm text-green-700 font-medium tracking-wide leading-tight">FOUNDATION</p>

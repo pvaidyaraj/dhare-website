@@ -42,7 +42,7 @@ export default async function LaunchPage({ searchParams }: Props) {
               background: "white",
             }}
           >
-            <Image src="/logos/dhare-logo-3.png" alt="Dhare Foundation" fill className="object-contain p-1.5" priority />
+            <Image src="/images/logos/dhare-logo-3.png" alt="Dhare Foundation" fill className="object-contain p-1.5" priority />
           </div>
         </div>
 

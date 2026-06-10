@@ -17,13 +17,15 @@ export default function LoginForm() {
         <div className="absolute -bottom-32 -right-16 w-80 h-80 bg-white/5 rounded-full" />
 
         <div className="relative z-10 text-center">
-          <Image
-            src="/images/logos/dhare-logo-new.png"
-            alt="Dhare Foundation"
-            width={140}
-            height={140}
-            className="mx-auto mb-6 drop-shadow-2xl"
-          />
+          <div className="mx-auto mb-6 w-36 h-36 rounded-2xl bg-white/95 shadow-xl flex items-center justify-center p-2">
+            <Image
+              src="/images/logos/dhare-logo-new.png"
+              alt="Dhare Foundation"
+              width={120}
+              height={120}
+              className="object-contain"
+            />
+          </div>
           <h1 className="text-3xl font-bold text-white mb-3">Dhare Foundation</h1>
           <p className="text-green-200 text-lg mb-8">Creating Green, Living, Biodiverse Karnataka</p>
           <div className="flex flex-col gap-3 text-left">

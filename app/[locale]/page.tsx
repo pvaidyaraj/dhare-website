@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getLaunchActive } from "../actions/launch";
+import { SAPLING_REGISTRATION_OPEN } from "@/lib/config";
 import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
 import SaplingPopup from "../components/SaplingPopup";
@@ -21,7 +22,7 @@ export default async function Home() {
 
   return (
     <>
-      <SaplingPopup />
+      {SAPLING_REGISTRATION_OPEN && <SaplingPopup />}
       <Navbar />
       <main>
         <HeroSection />

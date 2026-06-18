@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
+import { SAPLING_REGISTRATION_OPEN } from "@/lib/config";
 import SaplingRegistrationForm from "@/app/register-saplings/SaplingRegistrationForm";
 
 export const metadata = { title: "Free Sapling Registration — Dhare Foundation" };
@@ -24,15 +25,29 @@ export default async function SaplingRegistrationPage() {
         <p className="text-green-300 text-sm font-semibold tracking-wide mb-2">{t("initiative")}</p>
         <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1">{t("heading")}</h1>
         <p className="text-green-200 text-sm mb-3">{t("subtitle")}</p>
-        <div className="inline-flex items-center gap-1.5 bg-amber-500/20 border border-amber-400/30 rounded-full px-4 py-1.5">
-          <span className="text-amber-300 text-xs font-semibold">{t("deadline")}</span>
-        </div>
+        {SAPLING_REGISTRATION_OPEN && (
+          <div className="inline-flex items-center gap-1.5 bg-amber-500/20 border border-amber-400/30 rounded-full px-4 py-1.5">
+            <span className="text-amber-300 text-xs font-semibold">{t("deadline")}</span>
+          </div>
+        )}
       </div>
 
       <div className="max-w-lg mx-auto px-4 py-8">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
-          <SaplingRegistrationForm />
-        </div>
+        {SAPLING_REGISTRATION_OPEN ? (
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
+            <SaplingRegistrationForm />
+          </div>
+        ) : (
+          <div className="bg-white rounded-2xl shadow-sm border border-red-100 p-8 sm:p-12 text-center">
+            <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-gray-800 mb-2">Free Saplings Registration is Closed</h2>
+            <p className="text-gray-500 text-sm">The registration window has ended. Please check back later for future initiatives.</p>
+          </div>
+        )}
 
         <Link
           href="/"

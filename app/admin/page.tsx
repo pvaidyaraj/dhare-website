@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { isAuthenticated, getSaplingRegistrations, getVolunteerRegistrations } from "./actions";
+import { isAuthenticated, getSaplingRegistrations, getVolunteerRegistrations, getSaplingsPlanted } from "./actions";
 import LoginForm from "./LoginForm";
 import AdminDashboard from "./AdminDashboard";
 
@@ -15,10 +15,11 @@ export default async function AdminPage() {
     return <LoginForm />;
   }
 
-  const [saplings, volunteers] = await Promise.all([
+  const [saplings, volunteers, saplingsPlanted] = await Promise.all([
     getSaplingRegistrations(),
     getVolunteerRegistrations(),
+    getSaplingsPlanted(),
   ]);
 
-  return <AdminDashboard saplings={saplings} volunteers={volunteers} />;
+  return <AdminDashboard saplings={saplings} volunteers={volunteers} saplingsPlanted={saplingsPlanted} />;
 }

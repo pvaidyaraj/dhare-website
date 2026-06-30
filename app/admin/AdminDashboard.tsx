@@ -1,14 +1,15 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useActionState } from "react";
 import Image from "next/image";
-import { logout } from "./actions";
+import { logout, updateSaplingsPlanted } from "./actions";
 
 type Row = Record<string, unknown>;
 
 interface Props {
   saplings: Row[];
   volunteers: Row[];
+  saplingsPlanted: number;
 }
 
 const SAPLING_COLS = [
@@ -81,9 +82,10 @@ function StatCard({ icon, label, value, sub }: { icon: React.ReactNode; label: s
   );
 }
 
-export default function AdminDashboard({ saplings, volunteers }: Props) {
+export default function AdminDashboard({ saplings, volunteers, saplingsPlanted }: Props) {
   const [tab, setTab] = useState<"saplings" | "volunteers">("saplings");
   const [search, setSearch] = useState("");
+  const [counterState, counterAction, counterPending] = useActionState(updateSaplingsPlanted, null);
 
   const isSaplings = tab === "saplings";
   const cols  = isSaplings ? SAPLING_COLS : VOLUNTEER_COLS;
@@ -129,6 +131,63 @@ export default function AdminDashboard({ saplings, volunteers }: Props) {
       </header>
 
       <main className="flex-1 max-w-screen-xl mx-auto w-full px-6 py-8 space-y-7">
+
+        {/* ── Saplings Planted Counter ── */}
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center text-green-700 shrink-0">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+              </svg>
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 leading-tight">Saplings Planted Counter</p>
+              <p className="text-xs text-gray-400 mt-0.5">Displayed on the Hero and About sections of the public website</p>
+            </div>
+          </div>
+          <form action={counterAction} className="flex items-end gap-3">
+            <div className="flex-1 max-w-xs">
+              <label className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1.5 block">
+                Saplings Planted So Far
+              </label>
+              <input
+                name="saplings_planted"
+                type="number"
+                min="0"
+                step="1"
+                defaultValue={counterState?.success ? undefined : saplingsPlanted}
+                key={counterState?.success ? "refreshed" : "initial"}
+                className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-xl font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={counterPending}
+              className="flex items-center gap-2 bg-green-700 hover:bg-green-800 disabled:opacity-40 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors shadow-sm whitespace-nowrap"
+            >
+              {counterPending ? (
+                <>
+                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                  </svg>
+                  Saving…
+                </>
+              ) : "Update Count"}
+            </button>
+          </form>
+          {counterState?.success && (
+            <p className="mt-3 text-sm text-green-700 font-medium flex items-center gap-1.5">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Count updated — website will reflect the new number on next visit.
+            </p>
+          )}
+          {counterState?.error && (
+            <p className="mt-3 text-sm text-red-600">{counterState.error}</p>
+          )}
+        </div>
 
         {/* ── Stat cards ── */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

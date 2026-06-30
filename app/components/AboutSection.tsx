@@ -1,10 +1,13 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
+import { getSaplingsPlanted } from "@/lib/settings";
 
 const pillarIcons = ["🌳", "🌲", "🦋", "💧", "🏞️", "🤝"];
 
 export default async function AboutSection() {
   const t = await getTranslations("about");
+  const saplingsPlanted = await getSaplingsPlanted();
+  const formattedCount = saplingsPlanted.toLocaleString("en-IN");
 
   const pillars = pillarIcons.map((icon, i) => ({ icon, label: t(`pillar${i}` as any) }));
 
@@ -21,7 +24,7 @@ export default async function AboutSection() {
                 {t("para2Start")} <strong className="text-green-800">{t("greenRing")}</strong>
                 {t("para2Mid")} <strong>{t("2crore")}</strong> {t("para2And")} <strong>{t("3crore")}</strong>{" "}
                 {t("para2End")} <strong>{t("5crore")}</strong>{t("para2Planted")}{" "}
-                <strong className="text-green-800">{t("25k")}</strong> {t("para2Final")}
+                <strong className="text-green-800">{t("25k", { count: formattedCount })}</strong> {t("para2Final")}
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {pillars.map((p) => (

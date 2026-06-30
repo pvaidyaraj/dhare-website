@@ -1,8 +1,11 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
+import { getSaplingsPlanted } from "@/lib/settings";
 
 export default async function HeroSection() {
   const t = await getTranslations("hero");
+  const saplingsPlanted = await getSaplingsPlanted();
+  const formattedCount = saplingsPlanted.toLocaleString("en-IN");
 
   const counters = [
     { label: t("counter0Label"), value: "5,00,00,000", sub: t("counter0Sub"), icon: "🌳" },
@@ -50,7 +53,7 @@ export default async function HeroSection() {
 
         <div className="inline-flex items-center gap-3 bg-green-600/80 backdrop-blur-sm border border-green-400/50 rounded-2xl px-6 py-3 mb-4">
           <span className="w-2.5 h-2.5 bg-green-300 rounded-full animate-pulse shrink-0" />
-          <span className="text-white font-bold text-base sm:text-2xl lg:text-3xl">{t("saplingsStat")}</span>
+          <span className="text-white font-bold text-base sm:text-2xl lg:text-3xl">{t("saplingsStat", { count: formattedCount })}</span>
         </div>
 
         <p className="text-base sm:text-lg text-gray-200 max-w-2xl mx-auto leading-relaxed mb-2">

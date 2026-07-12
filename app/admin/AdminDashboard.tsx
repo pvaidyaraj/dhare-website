@@ -10,6 +10,7 @@ import RegistrationsPanel, { type Stat } from "./RegistrationsPanel";
 import SaplingsPlantedStat from "./SaplingsPlantedStat";
 import RegisterCoordinatorForm from "./RegisterCoordinatorForm";
 import type { PlantationSite, PlantationStats } from "@/lib/plantations";
+import type { SiteCoordinator } from "@/lib/auth/staffUsers";
 
 type Row = Record<string, unknown>;
 
@@ -19,6 +20,7 @@ interface Props {
   saplingsPlanted: number;
   plantationSites: PlantationSite[];
   plantationStats: PlantationStats;
+  siteCoordinators: SiteCoordinator[];
 }
 
 const PLANTATION_COLS = [
@@ -54,20 +56,28 @@ const VOLUNTEER_COLS = [
   { key: "created_at",     label: "Registered On" },
 ];
 
+const COORDINATOR_COLS = [
+  { key: "name",       label: "Name" },
+  { key: "username",   label: "Username" },
+  { key: "email",      label: "Email" },
+  { key: "created_at", label: "Registered On" },
+];
+
 function totalSaplingsRequested(saplings: Row[]): number {
   return saplings.reduce((sum, r) => sum + (Number(r.saplings_count) || 0), 0);
 }
 
 const TABS = [
-  { key: "plantations", label: "Plantation Sites" },
-  { key: "saplings",    label: "Sapling Registrations" },
-  { key: "volunteers",  label: "Volunteer Registrations" },
-  { key: "settings",    label: "Settings" },
+  { key: "plantations",   label: "Plantation Sites" },
+  { key: "saplings",      label: "Sapling Registrations" },
+  { key: "volunteers",    label: "Volunteer Registrations" },
+  { key: "coordinators",  label: "Site Coordinators" },
+  { key: "settings",      label: "Settings" },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
 
-export default function AdminDashboard({ saplings, volunteers, saplingsPlanted, plantationSites, plantationStats }: Props) {
+export default function AdminDashboard({ saplings, volunteers, saplingsPlanted, plantationSites, plantationStats, siteCoordinators }: Props) {
   const [tab, setTab] = useState<TabKey>("plantations");
   const [editingSite, setEditingSite] = useState<PlantationSite | null>(null);
   const [mapSite, setMapSite] = useState<{ latitude: number; longitude: number; label: string } | null>(null);
@@ -81,6 +91,7 @@ export default function AdminDashboard({ saplings, volunteers, saplingsPlanted, 
     plantations: plantationSites.length,
     saplings: saplings.length,
     volunteers: volunteers.length,
+    coordinators: siteCoordinators.length,
   };
 
   const plantationStatCards: Stat[] = [
@@ -148,6 +159,19 @@ export default function AdminDashboard({ saplings, volunteers, saplingsPlanted, 
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      ),
+    },
+  ];
+
+  const coordinatorStatCards: Stat[] = [
+    {
+      label: "Site Coordinators",
+      value: siteCoordinators.length,
+      sub: "Registered coordinator accounts",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a3 3 0 11-6 0 3 3 0 016 0zM3 20a6 6 0 0112 0v1H3v-1z" />
         </svg>
       ),
     },
@@ -262,14 +286,24 @@ export default function AdminDashboard({ saplings, volunteers, saplingsPlanted, 
           />
         )}
 
-        {tab === "settings" && (
+        {tab === "coordinators" && (
           <div className="space-y-7">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 max-w-md">
-              <p className="font-semibold text-gray-900 leading-tight mb-1">Public Website Counter</p>
-              <p className="text-xs text-gray-400 mb-4">Displayed on the Hero and About sections of the public website</p>
-              <SaplingsPlantedStat initialValue={saplingsPlanted} />
-            </div>
             <RegisterCoordinatorForm />
+            <RegistrationsPanel
+              data={siteCoordinators}
+              cols={COORDINATOR_COLS}
+              stats={coordinatorStatCards}
+              searchPlaceholder="Search by name, username, email…"
+              csvFilenamePrefix="dhare-site-coordinators"
+            />
+          </div>
+        )}
+
+        {tab === "settings" && (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 max-w-md">
+            <p className="font-semibold text-gray-900 leading-tight mb-1">Public Website Counter</p>
+            <p className="text-xs text-gray-400 mb-4">Displayed on the Hero and About sections of the public website</p>
+            <SaplingsPlantedStat initialValue={saplingsPlanted} />
           </div>
         )}
       </main>

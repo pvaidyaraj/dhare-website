@@ -6,10 +6,10 @@ import { createServerClient } from "@/lib/supabase";
 import { getSaplingsPlanted } from "@/lib/settings";
 import { getSiteMedia, type PlantationMedia } from "@/lib/plantations";
 import { requireRole } from "@/lib/auth/session";
-import { hashPassword } from "@/lib/auth/staffUsers";
+import { hashPassword, getSiteCoordinators } from "@/lib/auth/staffUsers";
 import { plantationSchema, parseGps, sanitizeFilename, validateMediaFiles } from "./plantationValidation";
 
-export { getSaplingsPlanted };
+export { getSaplingsPlanted, getSiteCoordinators };
 
 export async function isAuthenticated(): Promise<boolean> {
   return (await requireRole("admin")) !== null;

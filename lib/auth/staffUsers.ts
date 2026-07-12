@@ -44,3 +44,23 @@ export async function verifyPassword(hash: string, plain: string): Promise<boole
 export async function hashPassword(plain: string): Promise<string> {
   return bcrypt.hash(plain, 10);
 }
+
+export type SiteCoordinator = {
+  id: string;
+  name: string;
+  username: string;
+  email: string;
+  created_at: string;
+};
+
+export async function getSiteCoordinators(): Promise<SiteCoordinator[]> {
+  const supabase = createServerClient();
+  const { data, error } = await supabase
+    .from("staff_users")
+    .select("id, name, username, email, created_at")
+    .eq("role", "site_coordinator")
+    .order("created_at", { ascending: false });
+
+  if (error) throw new Error(error.message);
+  return data ?? [];
+}

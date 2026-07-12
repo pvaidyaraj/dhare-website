@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { isAuthenticated, getSaplingRegistrations, getVolunteerRegistrations, getSaplingsPlanted } from "./actions";
+import { isAuthenticated, getSaplingRegistrations, getVolunteerRegistrations, getSaplingsPlanted, getSiteCoordinators } from "./actions";
 import { getPlantationSites, getPlantationStats } from "@/lib/plantations";
 import AdminDashboard from "./AdminDashboard";
 
@@ -16,12 +16,13 @@ export default async function AdminPage() {
     redirect("/login");
   }
 
-  const [saplings, volunteers, saplingsPlanted, plantationSites, plantationStats] = await Promise.all([
+  const [saplings, volunteers, saplingsPlanted, plantationSites, plantationStats, siteCoordinators] = await Promise.all([
     getSaplingRegistrations(),
     getVolunteerRegistrations(),
     getSaplingsPlanted(),
     getPlantationSites(),
     getPlantationStats(),
+    getSiteCoordinators(),
   ]);
 
   return (
@@ -31,6 +32,7 @@ export default async function AdminPage() {
       saplingsPlanted={saplingsPlanted}
       plantationSites={plantationSites}
       plantationStats={plantationStats}
+      siteCoordinators={siteCoordinators}
     />
   );
 }

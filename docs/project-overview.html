@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dhare Foundation — Project Documentation</title>
+<meta name="description" content="Technical overview of the Dhare Foundation website and admin system." />
+<style>
+  :root {
+    --bg: #F4F6F2;
+    --bg-raised: #FFFFFF;
+    --ink: #1A2119;
+    --muted: #5B6656;
+    --accent: #2F5D3A;
+    --accent-soft: #E4EBE0;
+    --clay: #8B6F47;
+    --clay-soft: #F1EAE0;
+    --line: #D8DED2;
+    --good: #2F7D4F;
+    --good-soft: #E1F0E5;
+    --warn: #A66A1F;
+    --warn-soft: #F5E9D6;
+    --code-bg: #EEF1EA;
+    --shadow: 0 1px 2px rgba(26,33,25,0.04), 0 8px 24px rgba(26,33,25,0.05);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12160F;
+      --bg-raised: #181D14;
+      --ink: #EAEFE6;
+      --muted: #98A48F;
+      --accent: #7BBE88;
+      --accent-soft: #1D2A1C;
+      --clay: #D2AD7C;
+      --clay-soft: #29241A;
+      --line: #2A3327;
+      --good: #7BC28E;
+      --good-soft: #1B2C20;
+      --warn: #E0AC55;
+      --warn-soft: #2E2515;
+      --code-bg: #1B2117;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #12160F;
+    --bg-raised: #181D14;
+    --ink: #EAEFE6;
+    --muted: #98A48F;
+    --accent: #7BBE88;
+    --accent-soft: #1D2A1C;
+    --clay: #D2AD7C;
+    --clay-soft: #29241A;
+    --line: #2A3327;
+    --good: #7BC28E;
+    --good-soft: #1B2C20;
+    --warn: #E0AC55;
+    --warn-soft: #2E2515;
+    --code-bg: #1B2117;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  :root[data-theme="light"] {
+    --bg: #F4F6F2;
+    --bg-raised: #FFFFFF;
+    --ink: #1A2119;
+    --muted: #5B6656;
+    --accent: #2F5D3A;
+    --accent-soft: #E4EBE0;
+    --clay: #8B6F47;
+    --clay-soft: #F1EAE0;
+    --line: #D8DED2;
+    --good: #2F7D4F;
+    --good-soft: #E1F0E5;
+    --warn: #A66A1F;
+    --warn-soft: #F5E9D6;
+    --code-bg: #EEF1EA;
+    --shadow: 0 1px 2px rgba(26,33,25,0.04), 0 8px 24px rgba(26,33,25,0.05);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Seravek, Optima, "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: Charter, "Iowan Old Style", Georgia, Cambria, serif;
+    font-weight: 600;
+    text-wrap: balance;
+    color: var(--ink);
+  }
+
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible, button:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  code, .mono {
+    font-family: "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 0.88em;
+  }
+
+  /* ---- Page shell ---- */
+  .shell {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 0;
+    max-width: 1160px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 880px) {
+    .shell { grid-template-columns: 1fr; }
+    nav.toc { display: none; }
+  }
+
+  /* ---- Masthead ---- */
+  header.masthead {
+    padding: 3rem 2rem 2rem;
+    max-width: 1160px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--line);
+  }
+  header.masthead .eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--clay);
+    font-weight: 600;
+    margin: 0 0 0.6rem;
+  }
+  header.masthead h1 {
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.01em;
+  }
+  header.masthead p.dek {
+    margin: 0 0 1.1rem;
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 60ch;
+  }
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    align-items: center;
+  }
+  .meta-row .sep { color: var(--line); }
+  .meta-row a { font-weight: 600; }
+
+  /* ---- TOC ---- */
+  nav.toc {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    padding: 2.5rem 1.25rem 2rem 2rem;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  nav.toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  nav.toc a {
+    display: block;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.88rem;
+    border-left: 2px solid transparent;
+  }
+  nav.toc a:hover { color: var(--ink); background: var(--accent-soft); }
+  nav.toc .toc-num { font-family: Charter, Georgia, serif; color: var(--clay); margin-right: 0.45rem; font-size: 0.82rem; }
+
+  /* ---- Main content ---- */
+  main {
+    padding: 2.5rem 2rem 5rem;
+    min-width: 0;
+  }
+  section { margin-bottom: 3.2rem; scroll-margin-top: 1rem; }
+  section > h2 {
+    font-size: 1.5rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin: 0 0 0.3rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--line);
+  }
+  section > h2 .num {
+    font-size: 0.95rem;
+    color: var(--clay);
+    font-weight: 600;
+  }
+  section > p.lead {
+    color: var(--muted);
+    max-width: 68ch;
+    margin: 0.9rem 0 1.3rem;
+  }
+  h3 {
+    font-size: 1.12rem;
+    margin: 1.8rem 0 0.6rem;
+  }
+  p { max-width: 72ch; }
+  ul, ol.plain { padding-left: 1.3rem; max-width: 68ch; }
+  li { margin-bottom: 0.35rem; }
+
+  /* ---- Status pills ---- */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .pill.live { background: var(--good-soft); color: var(--good); }
+  .pill.placeholder { background: var(--warn-soft); color: var(--warn); }
+  .pill.legacy { background: var(--clay-soft); color: var(--clay); }
+
+  /* ---- Cards / grid ---- */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+  .card {
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 1.1rem 1.2rem;
+    box-shadow: var(--shadow);
+  }
+  .card h4 {
+    margin: 0 0 0.4rem;
+    font-family: Charter, Georgia, serif;
+    font-size: 1.02rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .card p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+
+  /* ---- Tables ---- */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.9rem; min-width: 560px; }
+  th, td { text-align: left; padding: 0.55rem 0.9rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  thead th {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--accent-soft); }
+  td code { white-space: nowrap; }
+
+  /* ---- Code / tree blocks ---- */
+  .tree, pre {
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    overflow-x: auto;
+    font-size: 0.83rem;
+    line-height: 1.65;
+    margin: 0.9rem 0;
+  }
+  .tree .dir { color: var(--accent); font-weight: 600; }
+  .tree .note { color: var(--muted); }
+
+  /* ---- Callouts ---- */
+  .callout {
+    border-left: 3px solid var(--warn);
+    background: var(--warn-soft);
+    padding: 0.85rem 1.1rem;
+    border-radius: 0 8px 8px 0;
+    max-width: 68ch;
+    font-size: 0.93rem;
+  }
+  .callout.good { border-left-color: var(--good); background: var(--good-soft); }
+  .callout strong { display: block; margin-bottom: 0.2rem; }
+
+  /* ---- Roadmap list ---- */
+  .roadmap { display: flex; flex-direction: column; gap: 0.9rem; max-width: 68ch; }
+  .roadmap-item { display: grid; grid-template-columns: 1.3rem 1fr; gap: 0.7rem; }
+  .roadmap-item .dot {
+    width: 0.55rem; height: 0.55rem; border-radius: 50%;
+    background: var(--clay); margin-top: 0.5rem;
+  }
+  .roadmap-item strong { display: block; }
+  .roadmap-item span.detail { color: var(--muted); font-size: 0.92rem; }
+
+  footer.page-footer {
+    max-width: 1160px; margin: 0 auto; padding: 2rem;
+    border-top: 1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    a, .pill { transition: background-color 0.15s ease, color 0.15s ease; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <p class="eyebrow">Technical Overview · Generated 12 July 2026</p>
+  <h1>Dhare Foundation — Project Documentation</h1>
+  <p class="dek">Website and admin system for a Karnataka-based tree-plantation nonprofit — public site, staff login, and a plantation-management dashboard, built on Next.js 16 and Supabase.</p>
+  <div class="meta-row">
+    <a href="https://www.dharefoundation.org">dharefoundation.org ↗</a>
+    <span class="sep">/</span>
+    <span>Next.js 16 · React 19 · Supabase · Tailwind CSS 4</span>
+    <span class="sep">/</span>
+    <span>Deployed on Vercel</span>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="toc" aria-label="Table of contents">
+    <ol>
+      <li><a href="#overview"><span class="toc-num">01</span>Overview</a></li>
+      <li><a href="#stack"><span class="toc-num">02</span>Tech stack</a></li>
+      <li><a href="#structure"><span class="toc-num">03</span>Project structure</a></li>
+      <li><a href="#public-site"><span class="toc-num">04</span>Public website</a></li>
+      <li><a href="#donations"><span class="toc-num">05</span>Donations</a></li>
+      <li><a href="#staff-system"><span class="toc-num">06</span>Staff system</a></li>
+      <li><a href="#database"><span class="toc-num">07</span>Database</a></li>
+      <li><a href="#deployment"><span class="toc-num">08</span>Deployment</a></li>
+      <li><a href="#roadmap"><span class="toc-num">09</span>Limitations &amp; roadmap</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <section id="overview">
+      <h2><span class="num">01</span> Overview</h2>
+      <p class="lead">Dhare Foundation plants and maintains trees across Karnataka — including the "Green Ring Bengaluru" greenbelt initiative — using both traditional plantation and the dense Miyawaki method. This site is its public face and its internal record-keeping tool: visitors learn about the work, register as volunteers, or request saplings; staff log in to record plantation sites, manage registrations, and control a few site-wide settings.</p>
+      <p>The codebase is a single Next.js application serving both halves. Public pages are internationalized (English and Kannada); the staff-facing admin system is a separate, flat set of routes layered on top, sharing the same database.</p>
+    </section>
+
+    <section id="stack">
+      <h2><span class="num">02</span> Tech stack</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Layer</th><th>Choice</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Framework</td><td><code>Next.js 16</code> (App Router, Turbopack)</td><td>Breaking changes vs. older Next.js — see <code>AGENTS.md</code></td></tr>
+            <tr><td>UI</td><td><code>React 19</code></td><td></td></tr>
+            <tr><td>Styling</td><td><code>Tailwind CSS 4</code></td><td></td></tr>
+            <tr><td>i18n</td><td><code>next-intl</code></td><td>English (default) + Kannada</td></tr>
+            <tr><td>Database &amp; storage</td><td><code>Supabase</code> (Postgres + Storage)</td><td>Accessed only via the service-role key, server-side</td></tr>
+            <tr><td>Forms</td><td><code>react-hook-form</code> + <code>zod</code></td><td>Client and server-side validation</td></tr>
+            <tr><td>Auth</td><td><code>bcryptjs</code> + signed HMAC session cookie</td><td>Custom, not a third-party auth provider</td></tr>
+            <tr><td>Hosting</td><td><code>Vercel</code></td><td>Auto-deploys on push to <code>master</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="structure">
+      <h2><span class="num">03</span> Project structure</h2>
+      <p class="lead">Two routing conventions coexist deliberately: locale-aware public pages, and flat, English-only staff routes excluded from the i18n middleware.</p>
+      <div class="tree" role="img" aria-label="Project folder structure">
+<span class="dir">app/[locale]/</span>        <span class="note">Locale-aware public pages: homepage, launch, register-saplings, team, volunteer</span>
+<span class="dir">app/actions/</span>          <span class="note">Server actions for public forms — sapling.ts, volunteer.ts, launch.ts</span>
+<span class="dir">app/admin/</span>            <span class="note">Admin dashboard (flat route) — actions split by domain, see below</span>
+<span class="dir">app/login/</span>            <span class="note">Shared staff login (flat route) — role tabs for Admin / Site Coordinator</span>
+<span class="dir">app/coordinator/</span>      <span class="note">Site Coordinator dashboard (flat route, placeholder)</span>
+<span class="dir">app/components/</span>       <span class="note">Shared public-site UI — Navbar, homepage sections, forms</span>
+<span class="dir">app/data/</span>             <span class="note">Static reference data — Karnataka districts, assembly constituencies</span>
+<span class="dir">lib/</span>
+  supabase.ts             <span class="note">The one Supabase client factory (service-role, server-only)</span>
+  plantations.ts          <span class="note">Read functions for plantation_sites / plantation_media</span>
+  settings.ts             <span class="note">getSaplingsPlanted() — the public homepage counter</span>
+  <span class="dir">auth/</span>
+    session.ts             <span class="note">Signed session cookie, role checks, isAuthenticated()</span>
+    staffUsers.ts           <span class="note">staff_users lookups, password hashing, getSiteCoordinators()</span>
+<span class="dir">i18n/</span>, <span class="dir">messages/</span>       <span class="note">next-intl routing config + en.json / kn.json translations</span>
+<span class="dir">scripts/</span>              <span class="note">create-staff-user.mjs and one-off DB smoke-test scripts</span>
+supabase-setup.sql        <span class="note">Append-only schema log — see Database section</span></div>
+
+      <h3>Admin server actions, split by domain</h3>
+      <p>Originally one 293-line file; split so each admin feature area is independently readable and editable.</p>
+      <div class="grid-2">
+        <div class="card"><h4>registrationActions.ts</h4><p>Sapling/volunteer reads + the saplings-planted counter update</p></div>
+        <div class="card"><h4>plantationActions.ts</h4><p>Plantation site create/update + media upload to Supabase Storage</p></div>
+        <div class="card"><h4>staffActions.ts</h4><p>Site Coordinator registration + coordinator list</p></div>
+      </div>
+    </section>
+
+    <section id="public-site">
+      <h2><span class="num">04</span> Public website</h2>
+      <p class="lead">A single scrolling homepage plus a few dedicated pages, all localized into English and Kannada.</p>
+
+      <h3>Homepage sections</h3>
+      <ul>
+        <li><strong>Hero</strong> — aerial forest photo with a live saplings-planted counter</li>
+        <li><strong>About</strong> — mission narrative and six organizational pillars</li>
+        <li><strong>MoU</strong> — partnership/tank-rejuvenation callout</li>
+        <li><strong>Green Ring</strong> — the Bengaluru greenbelt initiative, explained</li>
+        <li><strong>Major Projects</strong> — a grid of six flagship projects</li>
+        <li><strong>Why Trees</strong> — an eight-point educational section</li>
+        <li><strong>Traditional Plantation &amp; Miyawaki Method</strong> — the two planting approaches used, with a worked example</li>
+        <li><strong>Gallery</strong> and <strong>Media Coverage</strong> — swipeable photo and press carousels</li>
+        <li><strong>Donation</strong> — see below</li>
+        <li><strong>Volunteer CTA</strong> — links through to the full volunteer form</li>
+      </ul>
+
+      <h3>Standalone pages</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Page</th><th>Purpose</th><th>Writes to</th></tr></thead>
+          <tbody>
+            <tr><td><code>/register-saplings</code></td><td>Bulk sapling request — constituency, contact details, quantity ≥ 51</td><td><code>sapling_registrations</code></td></tr>
+            <tr><td><code>/volunteer</code></td><td>Volunteer intake — skills, availability, motivation</td><td><code>volunteer_registrations</code></td></tr>
+            <tr><td><code>/team</code></td><td>Static Board of Directors bios</td><td>—</td></tr>
+            <tr><td><code>/launch</code></td><td>Global site-activation gate — see callout below</td><td><code>site_settings.launch_active</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout">
+        <strong>The launch gate</strong>
+        When <code>launch_active</code> is <code>true</code>, every visit to <code>/</code> redirects to <code>/launch</code> instead — a "coming soon" screen with a button that flips the flag off. Re-locking the whole public site is done via <code>/launch?admin=&lt;LAUNCH_ADMIN_KEY&gt;</code>.
+      </div>
+    </section>
+
+    <section id="donations">
+      <h2><span class="num">05</span> Donations <span class="pill legacy">Bank transfer only</span></h2>
+      <p class="lead">A Razorpay online-checkout integration was built, tested, then deliberately reverted.</p>
+      <p>The Donate section shows three suggested tiers and a custom-amount option; every button opens a modal with bank transfer details (account number, IFSC, branch). No transaction is recorded today — it's informational only. Rebuilding this with Razorpay, including a receipt/confirmation step and donation record-keeping, is the next planned feature.</p>
+    </section>
+
+    <section id="staff-system">
+      <h2><span class="num">06</span> Staff system</h2>
+      <p class="lead">One login page, two roles, a shared session model.</p>
+
+      <h3>Login &amp; sessions</h3>
+      <p><code>/login</code> presents role tabs (Admin / Site Coordinator) over a single username-or-email + password form. Accounts live in <code>staff_users</code> (bcrypt-hashed passwords), created from the admin dashboard or via <code>scripts/create-staff-user.mjs</code>. A session is a signed HMAC-SHA256 cookie carrying <code>{ userId, role, name }</code>, verified on every request to <code>/admin</code> or <code>/coordinator</code>.</p>
+
+      <h3>Admin dashboard <span class="pill live">Live</span></h3>
+      <div class="grid-2">
+        <div class="card"><h4>Plantation Sites</h4><p>Record year, district, location, address, GPS, tree count, photos/videos; edit existing sites (media is add-only for now); click GPS coordinates to view an embedded Google Map</p></div>
+        <div class="card"><h4>Sapling Registrations</h4><p>Searchable table of sapling requests, with CSV export</p></div>
+        <div class="card"><h4>Volunteer Registrations</h4><p>Searchable table of volunteer sign-ups, with CSV export</p></div>
+        <div class="card"><h4>Site Coordinators</h4><p>Register new coordinator accounts and view the existing list</p></div>
+        <div class="card"><h4>Settings</h4><p>Edit the public "Saplings Planted" counter shown on the homepage</p></div>
+      </div>
+
+      <h3>Coordinator dashboard <span class="pill placeholder">Placeholder</span></h3>
+      <p>Accessible and authenticated, but feature-empty — coordinator-specific tools are planned, not yet built.</p>
+    </section>
+
+    <section id="database">
+      <h2><span class="num">07</span> Database</h2>
+      <p class="lead">Supabase Postgres, accessed only via the service-role key from server code. Row-level security is enabled on every table; public read policies exist only where the public site actually displays the data.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Table</th><th>Holds</th><th>Public read?</th></tr></thead>
+          <tbody>
+            <tr><td><code>sapling_registrations</code></td><td>Bulk sapling requests from the public form</td><td>No</td></tr>
+            <tr><td><code>volunteer_registrations</code></td><td>Volunteer sign-ups (unique per email)</td><td>No</td></tr>
+            <tr><td><code>plantation_sites</code></td><td>Year, district, location, address, GPS, tree count</td><td>Yes</td></tr>
+            <tr><td><code>plantation_media</code></td><td>Photo/video references per site (storage path, type, order)</td><td>Yes</td></tr>
+            <tr><td><code>staff_users</code></td><td>Admin / Site Coordinator accounts (bcrypt hash)</td><td>No — service role only</td></tr>
+            <tr><td><code>site_settings</code></td><td>Saplings-planted counter, launch-gate flag</td><td>Read via server code only</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Plantation photos/videos live in the <code>plantation-media</code> Storage bucket (public read, for future public display).</p>
+      <div class="callout">
+        <strong>No migration tool</strong>
+        <code>supabase-setup.sql</code> is an append-only log of statements, pasted into the Supabase SQL Editor by hand. New changes get a new dated section at the bottom, written to be safe to re-run (<code>if not exists</code>, <code>on conflict do nothing</code>) — history is never rewritten.
+      </div>
+    </section>
+
+    <section id="deployment">
+      <h2><span class="num">08</span> Deployment</h2>
+      <p class="lead">Every push to <code>master</code> deploys straight to production. There is no staging environment and no CI gate — the checklist below is the substitute.</p>
+      <pre><code>npx tsc --noEmit   # typecheck
+npm run build      # full production build</code></pre>
+      <p>New environment variables must be added in Vercel <em>before</em> the code that needs them ships — otherwise the affected pages error immediately after deploy.</p>
+      <div class="callout">
+        <strong>Dev and production share one Supabase project</strong>
+        There is no separate staging database today. Anything created while testing locally — registrations, plantation sites, staff accounts — is real, live data.
+      </div>
+    </section>
+
+    <section id="roadmap">
+      <h2><span class="num">09</span> Limitations &amp; roadmap</h2>
+      <p class="lead">What's known, on purpose, to be incomplete — so it doesn't get mistaken for an oversight.</p>
+      <div class="roadmap">
+        <div class="roadmap-item"><span class="dot"></span><div><strong>Razorpay donations</strong><span class="detail"> — planned next: online checkout with a receipt/confirmation step and donation record-keeping, replacing the current bank-transfer-only modal.</span></div></div>
+        <div class="roadmap-item"><span class="dot"></span><div><strong>No staging database</strong><span class="detail"> — dev and production currently share one Supabase project; splitting these would remove the risk of test data reaching the live site.</span></div></div>
+        <div class="roadmap-item"><span class="dot"></span><div><strong>No automated tests</strong><span class="detail"> — verification today is <code>tsc</code> + a production build + manual browser checks. <code>playwright</code> is present only for an ad-hoc screenshot script, not a test suite.</span></div></div>
+        <div class="roadmap-item"><span class="dot"></span><div><strong>Plantation media is add-only</strong><span class="detail"> — editing a site can add more photos/videos, but not yet remove or replace existing ones.</span></div></div>
+        <div class="roadmap-item"><span class="dot"></span><div><strong>Site Coordinator features</strong><span class="detail"> — the dashboard exists and authenticates correctly, but has no coordinator-specific tools yet.</span></div></div>
+        <div class="roadmap-item"><span class="dot"></span><div><strong>Coordinator self-registration</strong><span class="detail"> — currently admin-registers-only. A self-registration-with-approval flow is a moderate addition if the number of coordinators grows, reusing the existing account and role-gating infrastructure.</span></div></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="page-footer">
+  Dhare Foundation — internal project documentation. Reflects the codebase as of 12 July 2026.
+</footer>
+
+</body>
+</html>

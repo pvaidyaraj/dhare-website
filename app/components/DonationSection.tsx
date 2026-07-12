@@ -2,32 +2,6 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { createDonationOrder, verifyDonationPayment } from "@/app/actions/donation";
-
-declare global {
-  interface Window {
-    Razorpay: new (options: Record<string, unknown>) => {
-      open: () => void;
-      on: (event: string, handler: (response: unknown) => void) => void;
-    };
-  }
-}
-
-const TIER_AMOUNTS = [200, 395, 700];
-
-function loadRazorpayScript(): Promise<boolean> {
-  return new Promise((resolve) => {
-    if (typeof window !== "undefined" && window.Razorpay) {
-      resolve(true);
-      return;
-    }
-    const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.onload = () => resolve(true);
-    script.onerror = () => resolve(false);
-    document.body.appendChild(script);
-  });
-}
 
 function BankDetailsModal({ onClose }: { onClose: () => void }) {
   const t = useTranslations("donate");
@@ -74,84 +48,10 @@ function BankDetailsModal({ onClose }: { onClose: () => void }) {
 export default function DonationSection() {
   const t = useTranslations("donate");
   const [showBankDetails, setShowBankDetails] = useState(false);
-  const [showCustomAmount, setShowCustomAmount] = useState(false);
-  const [customAmount, setCustomAmount] = useState("");
-  const [paying, setPaying] = useState(false);
-  const [payError, setPayError] = useState<string | null>(null);
-  const [paySuccess, setPaySuccess] = useState<string | null>(null);
-
-  async function handleDonate(amount: number) {
-    setPayError(null);
-    setPaySuccess(null);
-    setPaying(true);
-
-    const scriptLoaded = await loadRazorpayScript();
-    if (!scriptLoaded) {
-      setPayError("Could not load payment gateway. Please try again.");
-      setPaying(false);
-      return;
-    }
-
-    const order = await createDonationOrder(amount);
-    if (!order.success) {
-      setPayError(order.error);
-      setPaying(false);
-      return;
-    }
-
-    const razorpay = new window.Razorpay({
-      key: order.keyId,
-      amount: order.amount,
-      currency: order.currency,
-      order_id: order.orderId,
-      name: "Dhare Foundation",
-      description: "Donation",
-      theme: { color: "#15803d" },
-      handler: async (response: unknown) => {
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-          response as { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string };
-
-        const verification = await verifyDonationPayment({
-          razorpay_order_id,
-          razorpay_payment_id,
-          razorpay_signature,
-        });
-
-        if (verification.success) {
-          setPaySuccess(`Thank you for your donation! Payment ID: ${verification.paymentId}`);
-        } else {
-          setPayError(verification.error);
-        }
-        setPaying(false);
-      },
-      modal: {
-        ondismiss: () => setPaying(false),
-      },
-    });
-
-    razorpay.on("payment.failed", () => {
-      setPayError("Payment failed. Please try again.");
-      setPaying(false);
-    });
-
-    razorpay.open();
-  }
-
-  function handleCustomAmountSubmit() {
-    const amount = Math.floor(Number(customAmount));
-    if (!amount || amount < 10) {
-      setPayError("Enter a valid amount (minimum ₹10).");
-      return;
-    }
-    setShowCustomAmount(false);
-    setCustomAmount("");
-    handleDonate(amount);
-  }
 
   const tiers = [
     {
       amount: t("tier0Amount"),
-      numericAmount: TIER_AMOUNTS[0],
       label: t("tier0Label"),
       description: t("tier0Desc"),
       features: [t("tier0Feature0"), t("tier0Feature1")],
@@ -159,7 +59,6 @@ export default function DonationSection() {
     },
     {
       amount: t("tier1Amount"),
-      numericAmount: TIER_AMOUNTS[1],
       label: t("tier1Label"),
       description: t("tier1Desc"),
       features: [t("tier1Feature0"), t("tier1Feature1"), t("tier1Feature2")],
@@ -167,7 +66,6 @@ export default function DonationSection() {
     },
     {
       amount: t("tier2Amount"),
-      numericAmount: TIER_AMOUNTS[2],
       label: t("tier2Label"),
       description: t("tier2Desc"),
       features: [t("tier2Feature0"), t("tier2Feature1"), t("tier2Feature2"), t("tier2Feature3")],
@@ -213,9 +111,8 @@ export default function DonationSection() {
                 ))}
               </ul>
               <button
-                onClick={() => handleDonate(tier.numericAmount)}
-                disabled={paying}
-                className={`w-full py-3 rounded-full font-semibold text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed ${
+                onClick={() => setShowBankDetails(true)}
+                className={`w-full py-3 rounded-full font-semibold text-sm transition-colors ${
                   tier.highlighted
                     ? "bg-white text-green-700 hover:bg-green-50"
                     : "bg-green-700 text-white hover:bg-green-600 border border-green-600"
@@ -227,48 +124,13 @@ export default function DonationSection() {
           ))}
         </div>
 
-        <div className="text-center space-y-4">
-          {showCustomAmount ? (
-            <div className="inline-flex items-center gap-2">
-              <input
-                type="number"
-                min={10}
-                value={customAmount}
-                onChange={(e) => setCustomAmount(e.target.value)}
-                placeholder="₹ Amount"
-                className="w-32 px-4 py-3 rounded-full bg-green-800/60 border border-green-600 text-white placeholder:text-green-300 text-sm focus:outline-none focus:border-green-400"
-                autoFocus
-              />
-              <button
-                onClick={handleCustomAmountSubmit}
-                disabled={paying}
-                className="px-5 py-3 bg-green-700 hover:bg-green-600 text-white font-semibold rounded-full text-sm border border-green-600 disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                Donate
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => setShowCustomAmount(true)}
-              disabled={paying}
-              className="inline-flex items-center gap-2 border-2 border-green-500 text-green-300 hover:text-white hover:border-white px-6 py-3 rounded-full font-semibold text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {t("customAmount")}
-            </button>
-          )}
-
-          {paying && <p className="text-green-300 text-sm">Processing…</p>}
-          {payError && <p className="text-red-300 text-sm">{payError}</p>}
-          {paySuccess && <p className="text-green-300 text-sm font-semibold">{paySuccess}</p>}
-
-          <div>
-            <button
-              onClick={() => setShowBankDetails(true)}
-              className="text-green-300 hover:text-white text-xs underline underline-offset-2 transition-colors"
-            >
-              Prefer a bank transfer instead?
-            </button>
-          </div>
+        <div className="text-center">
+          <button
+            onClick={() => setShowBankDetails(true)}
+            className="inline-flex items-center gap-2 border-2 border-green-500 text-green-300 hover:text-white hover:border-white px-6 py-3 rounded-full font-semibold text-sm transition-colors"
+          >
+            {t("customAmount")}
+          </button>
         </div>
       </div>
     </section>

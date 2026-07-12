@@ -81,3 +81,7 @@ export async function requireRole(role: StaffRole): Promise<SessionPayload | nul
   if (!session || session.role !== role) return null;
   return session;
 }
+
+export async function isAuthenticated(): Promise<boolean> {
+  return (await requireRole("admin")) !== null;
+}

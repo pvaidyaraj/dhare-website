@@ -1,64 +1,10 @@
 "use server";
 
-import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createServerClient } from "@/lib/supabase";
-import { getSaplingsPlanted } from "@/lib/settings";
 import { getSiteMedia, type PlantationMedia } from "@/lib/plantations";
-import { requireRole } from "@/lib/auth/session";
-import { hashPassword, getSiteCoordinators } from "@/lib/auth/staffUsers";
+import { isAuthenticated } from "@/lib/auth/session";
 import { plantationSchema, parseGps, sanitizeFilename, validateMediaFiles } from "./plantationValidation";
-
-export { getSaplingsPlanted, getSiteCoordinators };
-
-export async function isAuthenticated(): Promise<boolean> {
-  return (await requireRole("admin")) !== null;
-}
-
-export async function getSaplingRegistrations() {
-  const supabase = createServerClient();
-  const { data, error } = await supabase
-    .from("sapling_registrations")
-    .select("*")
-    .order("created_at", { ascending: false });
-  if (error) throw new Error(error.message);
-  return data ?? [];
-}
-
-export async function getVolunteerRegistrations() {
-  const supabase = createServerClient();
-  const { data, error } = await supabase
-    .from("volunteer_registrations")
-    .select("*")
-    .order("created_at", { ascending: false });
-  if (error) throw new Error(error.message);
-  return data ?? [];
-}
-
-export async function updateSaplingsPlanted(
-  _prev: { error?: string; success?: boolean } | null,
-  formData: FormData
-): Promise<{ error?: string; success?: boolean }> {
-  const authed = await isAuthenticated();
-  if (!authed) return { error: "Unauthorized" };
-
-  const count = Number(formData.get("saplings_planted"));
-  if (!Number.isInteger(count) || count < 0) {
-    return { error: "Please enter a valid positive number." };
-  }
-
-  const supabase = createServerClient();
-  const { error } = await supabase
-    .from("site_settings")
-    .update({ saplings_planted: count })
-    .eq("id", true);
-
-  if (error) return { error: error.message };
-
-  revalidatePath("/");
-  revalidatePath("/[locale]", "page");
-  return { success: true };
-}
 
 export type PlantationFormState = { error?: string; success?: boolean; warnings?: string[] };
 
@@ -238,56 +184,4 @@ export async function updatePlantationSite(
 
   revalidatePath("/admin");
   return { success: true, warnings: warnings.length ? warnings : undefined };
-}
-
-const registerCoordinatorSchema = z.object({
-  name: z.string().trim().min(2, "Please enter a name"),
-  username: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .min(3, "Username must be at least 3 characters")
-    .regex(/^[a-z0-9_.]+$/, "Username can only contain letters, numbers, dots, and underscores"),
-  email: z.string().trim().toLowerCase().email("Enter a valid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-});
-
-export type RegisterCoordinatorState = { error?: string; success?: boolean };
-
-export async function registerStaffCoordinator(
-  _prev: RegisterCoordinatorState | null,
-  formData: FormData
-): Promise<RegisterCoordinatorState> {
-  const authed = await isAuthenticated();
-  if (!authed) return { error: "Unauthorized" };
-
-  const parsed = registerCoordinatorSchema.safeParse({
-    name: formData.get("name"),
-    username: formData.get("username"),
-    email: formData.get("email"),
-    password: formData.get("password"),
-  });
-  if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Please check the form fields." };
-  }
-
-  const password_hash = await hashPassword(parsed.data.password);
-  const supabase = createServerClient();
-
-  const { error } = await supabase.from("staff_users").insert({
-    name: parsed.data.name,
-    username: parsed.data.username,
-    email: parsed.data.email,
-    password_hash,
-    role: "site_coordinator",
-  });
-
-  if (error) {
-    if (error.code === "23505") {
-      return { error: "That username or email is already registered." };
-    }
-    return { error: error.message };
-  }
-
-  return { success: true };
 }

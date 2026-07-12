@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
-import { updatePlantationSite, getPlantationMediaForSite } from "./actions";
+import { updatePlantationSite, getPlantationMediaForSite } from "./plantationActions";
 import { KARNATAKA_DISTRICTS } from "@/app/data/karnatakaDistricts";
 import type { PlantationSite, PlantationMedia } from "@/lib/plantations";
 

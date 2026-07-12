@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
-import { updateSaplingsPlanted } from "./actions";
+import { updateSaplingsPlanted } from "./registrationActions";
 
 interface Props {
   initialValue: number;

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { isAuthenticated, getSaplingRegistrations, getVolunteerRegistrations, getSaplingsPlanted, getSiteCoordinators } from "./actions";
+import { isAuthenticated } from "@/lib/auth/session";
+import { getSaplingRegistrations, getVolunteerRegistrations, getSaplingsPlanted } from "./registrationActions";
+import { getSiteCoordinators } from "./staffActions";
 import { getPlantationSites, getPlantationStats } from "@/lib/plantations";
 import AdminDashboard from "./AdminDashboard";
 

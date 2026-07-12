@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
-import { registerStaffCoordinator } from "./actions";
+import { registerStaffCoordinator } from "./staffActions";
 
 export default function RegisterCoordinatorForm() {
   const [open, setOpen] = useState(false);

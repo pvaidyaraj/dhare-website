@@ -8,6 +8,7 @@ import EditPlantationSiteModal from "./EditPlantationSiteModal";
 import GoogleMapModal from "./GoogleMapModal";
 import RegistrationsPanel, { type Stat } from "./RegistrationsPanel";
 import SaplingsPlantedStat from "./SaplingsPlantedStat";
+import RegisterCoordinatorForm from "./RegisterCoordinatorForm";
 import type { PlantationSite, PlantationStats } from "@/lib/plantations";
 
 type Row = Record<string, unknown>;
@@ -262,10 +263,13 @@ export default function AdminDashboard({ saplings, volunteers, saplingsPlanted, 
         )}
 
         {tab === "settings" && (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 max-w-md">
-            <p className="font-semibold text-gray-900 leading-tight mb-1">Public Website Counter</p>
-            <p className="text-xs text-gray-400 mb-4">Displayed on the Hero and About sections of the public website</p>
-            <SaplingsPlantedStat initialValue={saplingsPlanted} />
+          <div className="space-y-7">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 max-w-md">
+              <p className="font-semibold text-gray-900 leading-tight mb-1">Public Website Counter</p>
+              <p className="text-xs text-gray-400 mb-4">Displayed on the Hero and About sections of the public website</p>
+              <SaplingsPlantedStat initialValue={saplingsPlanted} />
+            </div>
+            <RegisterCoordinatorForm />
           </div>
         )}
       </main>

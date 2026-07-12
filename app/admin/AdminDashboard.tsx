@@ -1,8 +1,14 @@
 "use client";
 
-import { useState, useMemo, useActionState } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { logout, updateSaplingsPlanted } from "./actions";
+import { logout } from "@/app/login/actions";
+import PlantationForm from "./PlantationForm";
+import EditPlantationSiteModal from "./EditPlantationSiteModal";
+import GoogleMapModal from "./GoogleMapModal";
+import RegistrationsPanel, { type Stat } from "./RegistrationsPanel";
+import SaplingsPlantedStat from "./SaplingsPlantedStat";
+import type { PlantationSite, PlantationStats } from "@/lib/plantations";
 
 type Row = Record<string, unknown>;
 
@@ -10,7 +16,19 @@ interface Props {
   saplings: Row[];
   volunteers: Row[];
   saplingsPlanted: number;
+  plantationSites: PlantationSite[];
+  plantationStats: PlantationStats;
 }
+
+const PLANTATION_COLS = [
+  { key: "year",          label: "Year" },
+  { key: "district",      label: "District" },
+  { key: "place_name",    label: "Location" },
+  { key: "address",       label: "Address" },
+  { key: "gps",           label: "GPS" },
+  { key: "sapling_count", label: "Trees" },
+  { key: "created_at",    label: "Added On" },
+];
 
 const SAPLING_COLS = [
   { key: "full_name",             label: "Name" },
@@ -35,74 +53,111 @@ const VOLUNTEER_COLS = [
   { key: "created_at",     label: "Registered On" },
 ];
 
-function formatCell(value: unknown): string {
-  if (value == null) return "—";
-  if (Array.isArray(value)) return value.join(", ");
-  if (typeof value === "string" && /\d{4}-\d{2}-\d{2}T/.test(value)) {
-    return new Date(value).toLocaleString("en-IN", {
-      timeZone: "Asia/Kolkata",
-      day: "2-digit", month: "short", year: "numeric",
-      hour: "2-digit", minute: "2-digit",
-    });
-  }
-  return String(value);
-}
-
-function totalSaplings(saplings: Row[]): number {
+function totalSaplingsRequested(saplings: Row[]): number {
   return saplings.reduce((sum, r) => sum + (Number(r.saplings_count) || 0), 0);
 }
 
-function downloadCSV(data: Row[], cols: { key: string; label: string }[], filename: string) {
-  if (!data.length) return;
-  const header = cols.map(c => `"${c.label}"`).join(",");
-  const rows = data.map(row =>
-    cols.map(c => `"${formatCell(row[c.key]).replace(/"/g, '""')}"`).join(",")
-  );
-  const blob = new Blob(["﻿" + [header, ...rows].join("\n")], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-}
+const TABS = [
+  { key: "plantations", label: "Plantation Sites" },
+  { key: "saplings",    label: "Sapling Registrations" },
+  { key: "volunteers",  label: "Volunteer Registrations" },
+  { key: "settings",    label: "Settings" },
+] as const;
 
-function StatCard({ icon, label, value, sub }: { icon: React.ReactNode; label: string; value: number | string; sub?: string }) {
-  return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4">
-      <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center shrink-0 text-green-700">
-        {icon}
-      </div>
-      <div>
-        <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">{label}</p>
-        <p className="text-2xl font-bold text-gray-800">{value.toLocaleString("en-IN")}</p>
-        {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
-      </div>
-    </div>
-  );
-}
+type TabKey = (typeof TABS)[number]["key"];
 
-export default function AdminDashboard({ saplings, volunteers, saplingsPlanted }: Props) {
-  const [tab, setTab] = useState<"saplings" | "volunteers">("saplings");
-  const [search, setSearch] = useState("");
-  const [counterState, counterAction, counterPending] = useActionState(updateSaplingsPlanted, null);
+export default function AdminDashboard({ saplings, volunteers, saplingsPlanted, plantationSites, plantationStats }: Props) {
+  const [tab, setTab] = useState<TabKey>("plantations");
+  const [editingSite, setEditingSite] = useState<PlantationSite | null>(null);
+  const [mapSite, setMapSite] = useState<{ latitude: number; longitude: number; label: string } | null>(null);
 
-  const isSaplings = tab === "saplings";
-  const cols  = isSaplings ? SAPLING_COLS : VOLUNTEER_COLS;
-  const rawData = isSaplings ? saplings : volunteers;
+  const plantationRows: Row[] = plantationSites.map(s => ({
+    ...s,
+    gps: s.latitude != null && s.longitude != null ? `${s.latitude}, ${s.longitude}` : null,
+  }));
 
-  const filtered = useMemo(() => {
-    const q = search.toLowerCase().trim();
-    if (!q) return rawData;
-    return rawData.filter(row => cols.some(c => formatCell(row[c.key]).toLowerCase().includes(q)));
-  }, [rawData, cols, search]);
+  const counts: Partial<Record<TabKey, number>> = {
+    plantations: plantationSites.length,
+    saplings: saplings.length,
+    volunteers: volunteers.length,
+  };
+
+  const plantationStatCards: Stat[] = [
+    {
+      label: "Plantation Sites",
+      value: plantationStats.total_sites,
+      sub: "Total sites recorded",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+        </svg>
+      ),
+    },
+    {
+      label: "Total Trees Planted",
+      value: plantationStats.total_saplings,
+      sub: "Across all recorded sites",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        </svg>
+      ),
+    },
+    {
+      label: "Districts Covered",
+      value: plantationStats.total_districts,
+      sub: "Distinct districts",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      ),
+    },
+  ];
+
+  const saplingStatCards: Stat[] = [
+    {
+      label: "Sapling Registrations",
+      value: saplings.length,
+      sub: "Total requests received",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        </svg>
+      ),
+    },
+    {
+      label: "Total Saplings Requested",
+      value: totalSaplingsRequested(saplings),
+      sub: "Across all registrations",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+    },
+  ];
+
+  const volunteerStatCards: Stat[] = [
+    {
+      label: "Volunteer Registrations",
+      value: volunteers.length,
+      sub: "People ready to contribute",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      ),
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
 
       {/* ── Header ── */}
       <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-20">
-        <div className="max-w-screen-xl mx-auto px-6 py-3 flex items-center justify-between">
+        <div className="max-w-screen-xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Image
               src="/images/logos/dhare-logo-new.png"
@@ -116,244 +171,117 @@ export default function AdminDashboard({ saplings, volunteers, saplingsPlanted }
               <p className="text-xs text-gray-400">Administration Portal</p>
             </div>
           </div>
-          <form action={logout}>
-            <button
-              type="submit"
-              className="flex items-center gap-2 text-sm text-gray-600 hover:text-red-600 border border-gray-200 hover:border-red-200 px-4 py-2 rounded-xl transition-colors bg-gray-50 hover:bg-red-50"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-              Logout
-            </button>
-          </form>
+
+          <div className="flex items-center gap-4">
+            <form action={logout}>
+              <button
+                type="submit"
+                className="flex items-center gap-2 text-sm text-gray-600 hover:text-red-600 border border-gray-200 hover:border-red-200 px-4 py-2 rounded-xl transition-colors bg-gray-50 hover:bg-red-50"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Logout
+              </button>
+            </form>
+          </div>
         </div>
       </header>
 
       <main className="flex-1 max-w-screen-xl mx-auto w-full px-6 py-8 space-y-7">
 
-        {/* ── Saplings Planted Counter ── */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center text-green-700 shrink-0">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-              </svg>
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900 leading-tight">Saplings Planted Counter</p>
-              <p className="text-xs text-gray-400 mt-0.5">Displayed on the Hero and About sections of the public website</p>
-            </div>
-          </div>
-          <form action={counterAction} className="flex items-end gap-3">
-            <div className="flex-1 max-w-xs">
-              <label className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1.5 block">
-                Saplings Planted So Far
-              </label>
-              <input
-                name="saplings_planted"
-                type="number"
-                min="0"
-                step="1"
-                defaultValue={counterState?.success ? undefined : saplingsPlanted}
-                key={counterState?.success ? "refreshed" : "initial"}
-                className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-xl font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={counterPending}
-              className="flex items-center gap-2 bg-green-700 hover:bg-green-800 disabled:opacity-40 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors shadow-sm whitespace-nowrap"
-            >
-              {counterPending ? (
-                <>
-                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                  </svg>
-                  Saving…
-                </>
-              ) : "Update Count"}
-            </button>
-          </form>
-          {counterState?.success && (
-            <p className="mt-3 text-sm text-green-700 font-medium flex items-center gap-1.5">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              Count updated — website will reflect the new number on next visit.
-            </p>
-          )}
-          {counterState?.error && (
-            <p className="mt-3 text-sm text-red-600">{counterState.error}</p>
-          )}
-        </div>
-
-        {/* ── Stat cards ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <StatCard
-            label="Sapling Registrations"
-            value={saplings.length}
-            sub="Total requests received"
-            icon={
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-              </svg>
-            }
-          />
-          <StatCard
-            label="Total Saplings Requested"
-            value={totalSaplings(saplings)}
-            sub="Across all registrations"
-            icon={
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            }
-          />
-          <StatCard
-            label="Volunteer Registrations"
-            value={volunteers.length}
-            sub="People ready to contribute"
-            icon={
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            }
-          />
-        </div>
-
         {/* ── Tabs ── */}
         <div className="flex gap-2 border-b border-gray-200">
-          {(["saplings", "volunteers"] as const).map(t => {
-            const active = tab === t;
-            const label = t === "saplings" ? "Sapling Registrations" : "Volunteer Registrations";
-            const count = t === "saplings" ? saplings.length : volunteers.length;
+          {TABS.map(({ key, label }) => {
+            const active = tab === key;
             return (
               <button
-                key={t}
-                onClick={() => { setTab(t); setSearch(""); }}
+                key={key}
+                onClick={() => setTab(key)}
                 className={`relative pb-3 px-4 text-sm font-semibold transition-colors ${
                   active ? "text-green-700" : "text-gray-500 hover:text-gray-700"
                 }`}
               >
                 {label}
-                <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${active ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
-                  {count}
-                </span>
+                {counts[key] !== undefined && (
+                  <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${active ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
+                    {counts[key]}
+                  </span>
+                )}
                 {active && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-green-600 rounded-full" />}
               </button>
             );
           })}
         </div>
 
-        {/* ── Toolbar ── */}
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="relative flex-1 min-w-[220px]">
-            <svg className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input
-              type="text"
-              placeholder="Search by name, email, phone, constituency…"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="w-full pl-9 pr-9 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent bg-white"
+        {tab === "plantations" && (
+          <div className="space-y-7">
+            <PlantationForm />
+            <RegistrationsPanel
+              data={plantationRows}
+              cols={PLANTATION_COLS}
+              stats={plantationStatCards}
+              searchPlaceholder="Search by location, district, address…"
+              csvFilenamePrefix="dhare-plantation-sites"
+              onGpsClick={(row) => {
+                const latitude = row.latitude as number | null;
+                const longitude = row.longitude as number | null;
+                if (latitude == null || longitude == null) return;
+                setMapSite({ latitude, longitude, label: String(row.place_name ?? "Plantation Site") });
+              }}
+              renderRowActions={(row) => (
+                <button
+                  onClick={() => setEditingSite(row as unknown as PlantationSite)}
+                  className="text-green-700 hover:text-green-900 text-xs font-semibold"
+                >
+                  Edit
+                </button>
+              )}
             />
-            {search && (
-              <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            )}
           </div>
-          <span className="text-sm text-gray-400 whitespace-nowrap">
-            {filtered.length} of {rawData.length} records
-          </span>
-          <button
-            onClick={() => downloadCSV(filtered, cols, `dhare-${tab}-${new Date().toISOString().slice(0, 10)}.csv`)}
-            disabled={filtered.length === 0}
-            className="flex items-center gap-2 bg-green-700 hover:bg-green-800 disabled:opacity-40 text-white text-sm font-medium px-4 py-2.5 rounded-xl transition-colors shadow-sm whitespace-nowrap"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            Download CSV
-          </button>
-        </div>
+        )}
 
-        {/* ── Table ── */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-green-50 border-b border-green-100">
-                  <th className="text-left px-5 py-3.5 text-xs font-semibold text-green-800 uppercase tracking-wider w-10">#</th>
-                  {cols.map(c => (
-                    <th key={c.key} className="text-left px-5 py-3.5 text-xs font-semibold text-green-800 uppercase tracking-wider whitespace-nowrap">
-                      {c.label}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.length === 0 ? (
-                  <tr>
-                    <td colSpan={cols.length + 1} className="text-center py-16">
-                      <div className="flex flex-col items-center gap-2 text-gray-400">
-                        <svg className="w-10 h-10 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
-                        <p className="text-sm font-medium">No records found</p>
-                        {search && <p className="text-xs">Try a different search term</p>}
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  filtered.map((row, i) => (
-                    <tr
-                      key={String(row.id ?? i)}
-                      className={`border-b border-gray-50 hover:bg-green-50/40 transition-colors ${i % 2 === 0 ? "bg-white" : "bg-gray-50/40"}`}
-                    >
-                      <td className="px-5 py-3.5 text-gray-400 text-xs font-medium">{i + 1}</td>
-                      {cols.map(c => (
-                        <td key={c.key} className="px-5 py-3.5 text-gray-700 max-w-[240px]">
-                          {c.key === "saplings_count" ? (
-                            <span className="bg-green-100 text-green-800 font-semibold text-xs px-2.5 py-1 rounded-full">
-                              {formatCell(row[c.key])}
-                            </span>
-                          ) : c.key === "skills" || c.key === "availability" ? (
-                            <div className="flex flex-wrap gap-1">
-                              {(row[c.key] as string[] ?? []).slice(0, 3).map((tag: string) => (
-                                <span key={tag} className="bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded-full">{tag}</span>
-                              ))}
-                              {(row[c.key] as string[] ?? []).length > 3 && (
-                                <span className="text-gray-400 text-xs">+{(row[c.key] as string[]).length - 3}</span>
-                              )}
-                            </div>
-                          ) : (
-                            <span className="block truncate" title={formatCell(row[c.key])}>
-                              {formatCell(row[c.key])}
-                            </span>
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+        {tab === "saplings" && (
+          <RegistrationsPanel
+            data={saplings}
+            cols={SAPLING_COLS}
+            stats={saplingStatCards}
+            searchPlaceholder="Search by name, email, phone, constituency…"
+            csvFilenamePrefix="dhare-saplings"
+          />
+        )}
+
+        {tab === "volunteers" && (
+          <RegistrationsPanel
+            data={volunteers}
+            cols={VOLUNTEER_COLS}
+            stats={volunteerStatCards}
+            searchPlaceholder="Search by name, email, phone, district…"
+            csvFilenamePrefix="dhare-volunteers"
+          />
+        )}
+
+        {tab === "settings" && (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 max-w-md">
+            <p className="font-semibold text-gray-900 leading-tight mb-1">Public Website Counter</p>
+            <p className="text-xs text-gray-400 mb-4">Displayed on the Hero and About sections of the public website</p>
+            <SaplingsPlantedStat initialValue={saplingsPlanted} />
           </div>
-
-          {filtered.length > 0 && (
-            <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 text-xs text-gray-400 flex items-center justify-between">
-              <span>Showing {filtered.length} record{filtered.length !== 1 ? "s" : ""}</span>
-              <span>All times in IST</span>
-            </div>
-          )}
-        </div>
+        )}
       </main>
+
+      {editingSite && (
+        <EditPlantationSiteModal site={editingSite} onClose={() => setEditingSite(null)} />
+      )}
+
+      {mapSite && (
+        <GoogleMapModal
+          latitude={mapSite.latitude}
+          longitude={mapSite.longitude}
+          label={mapSite.label}
+          onClose={() => setMapSite(null)}
+        />
+      )}
     </div>
   );
 }

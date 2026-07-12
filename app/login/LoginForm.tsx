@@ -4,15 +4,20 @@ import { useActionState, useState } from "react";
 import Image from "next/image";
 import { login } from "./actions";
 
+const ROLES = [
+  { value: "admin", label: "Admin" },
+  { value: "site_coordinator", label: "Site Coordinator" },
+] as const;
+
 export default function LoginForm() {
   const [state, formAction, pending] = useActionState(login, null);
   const [showPassword, setShowPassword] = useState(false);
+  const [role, setRole] = useState<(typeof ROLES)[number]["value"]>("admin");
 
   return (
     <div className="min-h-screen flex">
       {/* Left panel — branding */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-green-900 via-green-800 to-emerald-700 flex-col items-center justify-center p-12 relative overflow-hidden">
-        {/* Decorative circles */}
         <div className="absolute -top-24 -left-24 w-96 h-96 bg-white/5 rounded-full" />
         <div className="absolute -bottom-32 -right-16 w-80 h-80 bg-white/5 rounded-full" />
 
@@ -28,28 +33,11 @@ export default function LoginForm() {
           </div>
           <h1 className="text-3xl font-bold text-white mb-3">Dhare Foundation</h1>
           <p className="text-green-200 text-lg mb-8">Creating Green, Living, Biodiverse Karnataka</p>
-          <div className="flex flex-col gap-3 text-left">
-            {[
-              "Manage sapling registrations",
-              "View volunteer sign-ups",
-              "Export data as CSV",
-            ].map(item => (
-              <div key={item} className="flex items-center gap-3 text-green-100 text-sm">
-                <div className="w-5 h-5 rounded-full bg-green-500/40 flex items-center justify-center shrink-0">
-                  <svg className="w-3 h-3 text-green-200" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                {item}
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 
       {/* Right panel — login form */}
       <div className="flex-1 flex flex-col items-center justify-center bg-gray-50 px-6 py-12">
-        {/* Mobile logo */}
         <div className="lg:hidden flex flex-col items-center mb-8">
           <Image
             src="/images/logos/dhare-logo-new.png"
@@ -63,14 +51,60 @@ export default function LoginForm() {
 
         <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 border border-gray-100">
           <div className="mb-7">
-            <h2 className="text-2xl font-bold text-gray-900">Administration Portal</h2>
-            <p className="text-gray-500 text-sm mt-1">Sign in to manage registrations</p>
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-gray-900">Staff Login</h2>
+              <a
+                href="/"
+                className="text-sm font-medium text-gray-500 hover:text-green-700 transition-colors flex items-center gap-1"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Home
+              </a>
+            </div>
+            <p className="text-gray-500 text-sm mt-1">Sign in to your dashboard</p>
+          </div>
+
+          {/* Role tabs */}
+          <div className="flex gap-2 mb-6 bg-gray-100 rounded-xl p-1">
+            {ROLES.map((r) => (
+              <button
+                key={r.value}
+                type="button"
+                onClick={() => setRole(r.value)}
+                className={`flex-1 text-sm font-semibold py-2 rounded-lg transition-colors ${
+                  role === r.value
+                    ? "bg-white text-green-800 shadow-sm"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                {r.label}
+              </button>
+            ))}
           </div>
 
           <form action={formAction} className="space-y-5">
+            <input type="hidden" name="role" value={role} />
+
+            <div>
+              <label htmlFor="identifier" className="block text-sm font-semibold text-gray-700 mb-1.5">
+                Username or Email
+              </label>
+              <input
+                id="identifier"
+                type="text"
+                name="identifier"
+                placeholder="username or you@example.com"
+                required
+                autoFocus
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent transition"
+              />
+            </div>
+
             <div>
               <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-1.5">
-                Admin Password
+                Password
               </label>
               <div className="relative">
                 <input
@@ -79,12 +113,11 @@ export default function LoginForm() {
                   name="password"
                   placeholder="Enter your password"
                   required
-                  autoFocus
                   className="w-full border border-gray-300 rounded-xl px-4 py-3 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent transition"
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPassword(v => !v)}
+                  onClick={() => setShowPassword((v) => !v)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   tabIndex={-1}
                   aria-label={showPassword ? "Hide password" : "Show password"}
@@ -125,7 +158,9 @@ export default function LoginForm() {
                   </svg>
                   Signing in…
                 </span>
-              ) : "Sign In"}
+              ) : (
+                "Sign In"
+              )}
             </button>
           </form>
         </div>

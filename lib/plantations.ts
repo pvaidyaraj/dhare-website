@@ -5,6 +5,7 @@ export type PlantationSite = {
   year: number;
   district: string;
   place_name: string;
+  address: string;
   sapling_count: number;
   latitude: number | null;
   longitude: number | null;

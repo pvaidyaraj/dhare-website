@@ -98,6 +98,12 @@ export default function Navbar() {
             >
               {t("donateNow")}
             </a>
+            <a
+              href="/login"
+              className="hidden md:inline-flex items-center text-sm font-medium text-gray-600 hover:text-green-700 transition-colors"
+            >
+              Login
+            </a>
             <div className="hidden md:block">
               <LocaleSwitcher />
             </div>
@@ -156,7 +162,14 @@ export default function Navbar() {
               >
                 {t("donateNow")}
               </a>
-              <div className="flex justify-end">
+              <div className="flex items-center justify-between">
+                <a
+                  href="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="text-sm font-medium text-gray-600 hover:text-green-700 transition-colors"
+                >
+                  Login
+                </a>
                 <LocaleSwitcher />
               </div>
             </div>

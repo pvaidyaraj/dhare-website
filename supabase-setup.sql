@@ -89,3 +89,42 @@ create policy "public read plantation_media"
 -- Run this to add the saplings_planted column to the existing site_settings table:
 -- alter table site_settings add column saplings_planted integer default 40000;
 -- update site_settings set saplings_planted = 40000 where id = true;
+
+-- -------------------------------------------------------
+-- Staff accounts: role-based login (admin, site_coordinator)
+-- -------------------------------------------------------
+
+create table staff_users (
+  id            uuid        default gen_random_uuid() primary key,
+  name          text        not null,
+  username      text        not null unique,
+  email         text        not null unique,
+  password_hash text        not null,
+  role          text        not null check (role in ('admin', 'site_coordinator')),
+  created_at    timestamptz default now() not null
+);
+
+alter table staff_users enable row level security;
+-- No public policies: only ever read via the service-role key, server-side.
+-- Use `node scripts/create-staff-user.mjs` to create accounts.
+
+-- If you already ran an earlier version of this file (without `username`),
+-- run this instead to add the column to your existing table:
+-- alter table staff_users add column if not exists username text unique;
+
+-- -------------------------------------------------------
+-- Plantation site entry form (admin)
+-- -------------------------------------------------------
+
+-- plantation_sites was created without an address column — add it:
+alter table plantation_sites add column if not exists address text not null default '';
+
+-- Create the storage bucket for plantation photos/videos, and allow public read
+-- (the bucket itself was only ever a commented-out example above; run this once):
+insert into storage.buckets (id, name, public)
+values ('plantation-media', 'plantation-media', true)
+on conflict (id) do nothing;
+
+create policy "public read plantation-media bucket"
+  on storage.objects for select
+  using (bucket_id = 'plantation-media');

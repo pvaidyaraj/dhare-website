@@ -1,52 +1,16 @@
 "use server";
 
-import { createHash } from "crypto";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createServerClient } from "@/lib/supabase";
 import { getSaplingsPlanted } from "@/lib/settings";
+import { getSiteMedia, type PlantationMedia } from "@/lib/plantations";
+import { requireRole } from "@/lib/auth/session";
+import { plantationSchema, parseGps, sanitizeFilename, validateMediaFiles } from "./plantationValidation";
 
 export { getSaplingsPlanted };
 
-function sessionToken(): string {
-  const pw = process.env.ADMIN_PASSWORD ?? "";
-  return createHash("sha256").update(`dhare-admin:${pw}`).digest("hex");
-}
-
 export async function isAuthenticated(): Promise<boolean> {
-  const cookieStore = await cookies();
-  const session = cookieStore.get("admin_session")?.value;
-  return !!session && session === sessionToken();
-}
-
-export async function login(
-  _prev: { error: string } | null,
-  formData: FormData
-): Promise<{ error: string } | null> {
-  const password = formData.get("password")?.toString() ?? "";
-  const adminPassword = process.env.ADMIN_PASSWORD ?? "";
-
-  if (!adminPassword || password !== adminPassword) {
-    return { error: "Incorrect password. Please try again." };
-  }
-
-  const cookieStore = await cookies();
-  cookieStore.set("admin_session", sessionToken(), {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: 60 * 60 * 8,
-    path: "/",
-  });
-
-  redirect("/admin");
-}
-
-export async function logout() {
-  const cookieStore = await cookies();
-  cookieStore.delete("admin_session");
-  redirect("/admin");
+  return (await requireRole("admin")) !== null;
 }
 
 export async function getSaplingRegistrations() {
@@ -92,4 +56,184 @@ export async function updateSaplingsPlanted(
   revalidatePath("/");
   revalidatePath("/[locale]", "page");
   return { success: true };
+}
+
+export type PlantationFormState = { error?: string; success?: boolean; warnings?: string[] };
+
+export async function createPlantationSite(
+  _prev: PlantationFormState | null,
+  formData: FormData
+): Promise<PlantationFormState> {
+  const authed = await isAuthenticated();
+  if (!authed) return { error: "Unauthorized" };
+
+  const parsed = plantationSchema.safeParse({
+    year: formData.get("year"),
+    district: formData.get("district"),
+    place_name: formData.get("place_name"),
+    address: formData.get("address"),
+    sapling_count: formData.get("sapling_count"),
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Please check the form fields." };
+  }
+
+  const gps = parseGps(formData.get("gps")?.toString() ?? "");
+  if (!gps) {
+    return {
+      error:
+        "Couldn't read those coordinates — copy the two numbers Google Maps shows, e.g. 12.9716, 77.5946.",
+    };
+  }
+
+  const files = formData.getAll("media").filter((f): f is File => f instanceof File && f.size > 0);
+  const fileError = validateMediaFiles(files);
+  if (fileError) return { error: fileError };
+
+  const supabase = createServerClient();
+
+  const { data: site, error: siteError } = await supabase
+    .from("plantation_sites")
+    .insert({
+      year: parsed.data.year,
+      district: parsed.data.district,
+      place_name: parsed.data.place_name,
+      address: parsed.data.address,
+      sapling_count: parsed.data.sapling_count,
+      latitude: gps.latitude,
+      longitude: gps.longitude,
+    })
+    .select("id")
+    .single();
+
+  if (siteError || !site) {
+    return { error: siteError?.message ?? "Failed to save the plantation site." };
+  }
+
+  const warnings: string[] = [];
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    const path = `${site.id}/${i}-${sanitizeFilename(file.name)}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("plantation-media")
+      .upload(path, file, { contentType: file.type });
+
+    if (uploadError) {
+      warnings.push(`Failed to upload "${file.name}": ${uploadError.message}`);
+      continue;
+    }
+
+    const { error: mediaError } = await supabase.from("plantation_media").insert({
+      site_id: site.id,
+      storage_path: path,
+      file_type: file.type.startsWith("video/") ? "video" : "photo",
+      sort_order: i,
+    });
+    if (mediaError) {
+      warnings.push(`Saved "${file.name}" but failed to record it: ${mediaError.message}`);
+    }
+  }
+
+  revalidatePath("/admin");
+  return { success: true, warnings: warnings.length ? warnings : undefined };
+}
+
+export async function getPlantationMediaForSite(siteId: string): Promise<PlantationMedia[]> {
+  const authed = await isAuthenticated();
+  if (!authed) return [];
+  return getSiteMedia(siteId);
+}
+
+export async function updatePlantationSite(
+  _prev: PlantationFormState | null,
+  formData: FormData
+): Promise<PlantationFormState> {
+  const authed = await isAuthenticated();
+  if (!authed) return { error: "Unauthorized" };
+
+  const siteId = formData.get("site_id")?.toString();
+  if (!siteId) return { error: "Missing site reference." };
+
+  const parsed = plantationSchema.safeParse({
+    year: formData.get("year"),
+    district: formData.get("district"),
+    place_name: formData.get("place_name"),
+    address: formData.get("address"),
+    sapling_count: formData.get("sapling_count"),
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Please check the form fields." };
+  }
+
+  const gps = parseGps(formData.get("gps")?.toString() ?? "");
+  if (!gps) {
+    return {
+      error:
+        "Couldn't read those coordinates — copy the two numbers Google Maps shows, e.g. 12.9716, 77.5946.",
+    };
+  }
+
+  const files = formData.getAll("media").filter((f): f is File => f instanceof File && f.size > 0);
+  const fileError = validateMediaFiles(files);
+  if (fileError) return { error: fileError };
+
+  const supabase = createServerClient();
+
+  const { error: updateError } = await supabase
+    .from("plantation_sites")
+    .update({
+      year: parsed.data.year,
+      district: parsed.data.district,
+      place_name: parsed.data.place_name,
+      address: parsed.data.address,
+      sapling_count: parsed.data.sapling_count,
+      latitude: gps.latitude,
+      longitude: gps.longitude,
+    })
+    .eq("id", siteId);
+
+  if (updateError) {
+    return { error: updateError.message };
+  }
+
+  const warnings: string[] = [];
+  if (files.length > 0) {
+    const { count: existingCount, error: countError } = await supabase
+      .from("plantation_media")
+      .select("id", { count: "exact", head: true })
+      .eq("site_id", siteId);
+
+    if (countError) {
+      warnings.push(`Site updated, but couldn't check existing media: ${countError.message}`);
+    } else {
+      const startIndex = existingCount ?? 0;
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const path = `${siteId}/${startIndex + i}-${sanitizeFilename(file.name)}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from("plantation-media")
+          .upload(path, file, { contentType: file.type });
+
+        if (uploadError) {
+          warnings.push(`Failed to upload "${file.name}": ${uploadError.message}`);
+          continue;
+        }
+
+        const { error: mediaError } = await supabase.from("plantation_media").insert({
+          site_id: siteId,
+          storage_path: path,
+          file_type: file.type.startsWith("video/") ? "video" : "photo",
+          sort_order: startIndex + i,
+        });
+        if (mediaError) {
+          warnings.push(`Saved "${file.name}" but failed to record it: ${mediaError.message}`);
+        }
+      }
+    }
+  }
+
+  revalidatePath("/admin");
+  return { success: true, warnings: warnings.length ? warnings : undefined };
 }

@@ -1,7 +1,33 @@
 "use client";
 
 import { useState } from "react";
+import Script from "next/script";
 import { useTranslations } from "next-intl";
+import { createRazorpayOrder, verifyRazorpayPayment } from "@/app/actions/donationActions";
+
+declare global {
+  interface Window {
+    Razorpay: new (options: RazorpayCheckoutOptions) => { open: () => void };
+  }
+}
+
+interface RazorpayCheckoutOptions {
+  key: string;
+  amount: number;
+  currency: string;
+  name: string;
+  description: string;
+  order_id: string;
+  handler: (response: {
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    razorpay_signature: string;
+  }) => void;
+  modal?: { ondismiss?: () => void };
+  theme?: { color: string };
+}
+
+const TIER_AMOUNTS = [200, 395, 700];
 
 function BankDetailsModal({ onClose }: { onClose: () => void }) {
   const t = useTranslations("donate");
@@ -45,9 +71,68 @@ function BankDetailsModal({ onClose }: { onClose: () => void }) {
   );
 }
 
+function CustomAmountModal({
+  onClose,
+  onPayOnline,
+  onBankTransfer,
+}: {
+  onClose: () => void;
+  onPayOnline: (amount: number) => void;
+  onBankTransfer: () => void;
+}) {
+  const t = useTranslations("donate");
+  const [amount, setAmount] = useState("");
+  const parsedAmount = Number(amount);
+  const isValid = amount.trim() !== "" && Number.isFinite(parsedAmount) && parsedAmount >= 1;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative bg-white rounded-2xl shadow-2xl max-w-sm w-full p-8 z-10">
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors" aria-label="Close">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+        <h3 className="text-gray-900 font-bold text-lg mb-4">{t("customAmount")}</h3>
+        <label className="block text-sm text-gray-500 mb-2" htmlFor="custom-donation-amount">
+          {t("customAmountLabel")}
+        </label>
+        <div className="flex items-center border border-gray-300 rounded-xl px-4 py-3 mb-5">
+          <span className="text-gray-500 mr-2">₹</span>
+          <input
+            id="custom-donation-amount"
+            type="number"
+            min={1}
+            inputMode="numeric"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="w-full outline-none text-gray-900"
+            placeholder="500"
+          />
+        </div>
+        <button
+          onClick={() => isValid && onPayOnline(parsedAmount)}
+          disabled={!isValid}
+          className="w-full py-3 bg-green-700 hover:bg-green-800 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors text-sm mb-3"
+        >
+          {t("payOnline")}
+        </button>
+        <button
+          onClick={onBankTransfer}
+          className="w-full py-3 border border-green-700 text-green-700 hover:bg-green-50 font-semibold rounded-xl transition-colors text-sm"
+        >
+          {t("viewBankDetails")}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function DonationSection() {
   const t = useTranslations("donate");
   const [showBankDetails, setShowBankDetails] = useState(false);
+  const [showCustomAmount, setShowCustomAmount] = useState(false);
+  const [payingIndex, setPayingIndex] = useState<number | null>(null);
+  const [paymentMessage, setPaymentMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const tiers = [
     {
@@ -73,9 +158,65 @@ export default function DonationSection() {
     },
   ];
 
+  async function payOnline(amountRupees: number, tierIndex: number | null) {
+    setPaymentMessage(null);
+    setPayingIndex(tierIndex ?? -1);
+
+    const order = await createRazorpayOrder({ amount: amountRupees });
+    if (!order.success) {
+      setPaymentMessage({ type: "error", text: order.error });
+      setPayingIndex(null);
+      return;
+    }
+
+    setShowCustomAmount(false);
+
+    const razorpay = new window.Razorpay({
+      key: order.keyId,
+      amount: order.amount,
+      currency: order.currency,
+      name: "Dhare Foundation",
+      description: t("heading"),
+      order_id: order.orderId,
+      handler: async (response) => {
+        const verification = await verifyRazorpayPayment({
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature,
+        });
+        setPayingIndex(null);
+        if (verification.success) {
+          setPaymentMessage({ type: "success", text: t("paymentSuccess") });
+        } else {
+          setPaymentMessage({ type: "error", text: t("paymentVerifyFailed") });
+        }
+      },
+      modal: {
+        ondismiss: () => {
+          setPayingIndex(null);
+        },
+      },
+      theme: { color: "#15803d" },
+    });
+
+    razorpay.open();
+  }
+
   return (
     <section id="donate" className="py-8 sm:py-10 bg-green-900">
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
+
       {showBankDetails && <BankDetailsModal onClose={() => setShowBankDetails(false)} />}
+      {showCustomAmount && (
+        <CustomAmountModal
+          onClose={() => setShowCustomAmount(false)}
+          onPayOnline={(amount) => payOnline(amount, null)}
+          onBankTransfer={() => {
+            setShowCustomAmount(false);
+            setShowBankDetails(true);
+          }}
+        />
+      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-7">
@@ -84,8 +225,21 @@ export default function DonationSection() {
           <p className="text-green-200 leading-relaxed">{t("desc")}</p>
         </div>
 
+        {paymentMessage && (
+          <div
+            role="status"
+            className={`max-w-2xl mx-auto mb-6 rounded-xl px-4 py-3 text-sm text-center font-medium ${
+              paymentMessage.type === "success"
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
+            }`}
+          >
+            {paymentMessage.text}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-6">
-          {tiers.map((tier) => (
+          {tiers.map((tier, index) => (
             <div
               key={tier.amount}
               className={`rounded-2xl p-5 sm:p-6 flex flex-col ${
@@ -111,14 +265,23 @@ export default function DonationSection() {
                 ))}
               </ul>
               <button
-                onClick={() => setShowBankDetails(true)}
-                className={`w-full py-3 rounded-full font-semibold text-sm transition-colors ${
+                onClick={() => payOnline(TIER_AMOUNTS[index], index)}
+                disabled={payingIndex !== null}
+                className={`w-full py-3 rounded-full font-semibold text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed ${
                   tier.highlighted
                     ? "bg-white text-green-700 hover:bg-green-50"
                     : "bg-green-700 text-white hover:bg-green-600 border border-green-600"
                 }`}
               >
-                {t("donateBtn", { amount: tier.amount })}
+                {payingIndex === index ? t("processing") : t("donateBtn", { amount: tier.amount })}
+              </button>
+              <button
+                onClick={() => setShowBankDetails(true)}
+                className={`mt-2 text-xs font-medium underline underline-offset-2 ${
+                  tier.highlighted ? "text-white/80 hover:text-white" : "text-green-300 hover:text-white"
+                }`}
+              >
+                {t("viewBankDetails")}
               </button>
             </div>
           ))}
@@ -126,7 +289,7 @@ export default function DonationSection() {
 
         <div className="text-center">
           <button
-            onClick={() => setShowBankDetails(true)}
+            onClick={() => setShowCustomAmount(true)}
             className="inline-flex items-center gap-2 border-2 border-green-500 text-green-300 hover:text-white hover:border-white px-6 py-3 rounded-full font-semibold text-sm transition-colors"
           >
             {t("customAmount")}
